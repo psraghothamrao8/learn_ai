@@ -14,40 +14,28 @@ Open `index.html` in your web browser:
 
 ---
 
-## 📚 Topics Covered
+## 📚 Topics & Interactive Visual Labs in `index.html`
 
-### 1. 📈 Differentiation (The "Speedometer")
-* **Intuition:** Measuring the instantaneous sensitivity: *"If I nudge input $x$ by a tiny amount $\Delta x$, how much does output $y$ react?"*
-* **From Average to Instant:** Watching the secant line snap onto the tangent line as $\Delta x \to 0$.
-* **Why Neural Nets Care:** It tells us whether turning a weight knob up or down reduces error.
+### 1. 📈 Differentiation Lab (Speedometer)
+* Interactive $\Delta x \to 0$ slider showing the secant line snap onto the tangent line.
 
-### 2. 📊 Integration (The "Odometer")
-* **Intuition:** Accumulating infinitely many paper-thin slices into a whole.
-* **Riemann Sums:** Slicing irregular curves into rectangular strips: $\sum f(x_i) \Delta x \to \int f(x) dx$.
-* **Fundamental Theorem of Calculus:** Proving why Differentiation and Integration are exact inverses of each other ($\int \frac{df}{dx} dx = f(x)$).
+### 2. 📊 Integration Lab (Odometer)
+* Riemann sum slider ($N = 2 \dots 60$) showing coarse rectangular blocks converge into the exact area.
 
-### 3. ⚙️ The Chain Rule (The Gearbox)
-* **Intuition:** Connecting mechanical gears: if gear A turns B by $3\times$, and B turns C by $4\times$, gear A turns C by $3 \times 4 = 12\times$.
-* **Math:** $\frac{dC}{dA} = \frac{dC}{dB} \times \frac{dB}{dA}$.
+### 3. 📐 Formula Derivations Lab (Geometric Proofs)
+* **Power Rule ($x^2 \to 2x$):** Interactive expanding square showing why the derivative is the two outer border strips ($2x$) while the tiny corner ($h^2$) vanishes.
+* **Product Rule ($(uv)' = u'v + uv'$):** Interactive expanding rectangle showing the two growing edge strips.
+* **Why $(e^x)' = e^x$:** Interactive height vs slope mirror showing that height and slope are identical at all points.
+* **Why "+ C" (Lost Shift):** Interactive slider moving the curve vertically while proving the derivative graph remains completely frozen.
+* **Fundamental Theorem of Calculus:** The telescoping domino cancellation proof of $F(b) - F(a) = \int_a^b f(x) dx$.
+* **Integration by Parts:** Interactive 2D partitioned box visualizer ($\int u dv = uv - \int v du$).
 
-### 4. 🧠 Backpropagation with Real Numbers
-* **Step-by-step arithmetic** for a single-neuron network with Sigmoid activation and Mean Squared Error.
-* Computing local gradients:
-  $$\frac{\partial L}{\partial w} = \frac{\partial L}{\partial a} \cdot \frac{\partial a}{\partial z} \cdot \frac{\partial z}{\partial w}$$
-* Updating parameters via **Gradient Descent**:
-  $$w_{\text{new}} = w_{\text{old}} - \eta \cdot \frac{\partial L}{\partial w}$$
-
----
-
-## 🎮 Interactive Features in `index.html`
-
-1. **Differentiation Visualizer:** Interactive slider to change $x$ and shrink $\Delta x$, showing the secant triangle collapse into the tangent line.
-2. **Integration Visualizer:** Interactive slider for slice count $N$ showing coarse rectangular blocks converge into the exact analytical area.
-3. **Directed Acyclic Graph (DAG):** Interactive single neuron computational graph with live gradient readouts.
-4. **Live Training Sandbox:** Interactive canvas plotting the real-time Loss curve across epochs as you step or auto-train.
+### 4. ⚙️ The Chain Rule & 🧠 Backpropagation
+* Full mathematical breakdown with concrete numbers ($x=2, w=0.5, y=1$).
+* Live interactive DAG with real-time gradient readouts.
+* Live Training Sandbox with real-time Loss curve canvas and **Auto-Train** animation.
 
 ---
 
 ## 📖 Deep Dive Notes
-
-For a complete, comprehensive mathematical reference and derivation notes, check out [NOTES.md](NOTES.md).
+For full mathematical derivations, check out [NOTES.md](NOTES.md).

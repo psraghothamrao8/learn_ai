@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Intuitive Calculus & Backpropagation Deep Dive</title>
+  <title>Calculus & Backpropagation Visualized — Complete In-Depth Lab</title>
   <style>
     :root {
       --bg: #0b0f19;
@@ -20,6 +20,7 @@
       --rose: #f43f5e;
       --rose-glow: rgba(244, 63, 94, 0.25);
       --amber: #f59e0b;
+      --amber-glow: rgba(245, 158, 11, 0.25);
       --purple: #a855f7;
     }
 
@@ -40,7 +41,7 @@
 
     /* Sidebar Navigation */
     aside {
-      width: 280px;
+      width: 290px;
       background-color: var(--surface);
       border-right: 1px solid var(--border);
       padding: 1.5rem 1rem;
@@ -51,19 +52,19 @@
       flex-shrink: 0;
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
+      gap: 1.25rem;
     }
 
     .brand {
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      padding-bottom: 1rem;
+      padding-bottom: 0.85rem;
       border-bottom: 1px solid var(--border);
     }
     .brand-icon {
-      width: 36px;
-      height: 36px;
+      width: 38px;
+      height: 38px;
       background: linear-gradient(135deg, var(--primary), var(--purple));
       border-radius: 10px;
       display: flex;
@@ -79,17 +80,17 @@
       color: #fff;
     }
     .brand-text p {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
     }
 
     .nav-group-title {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.06em;
       color: var(--text-muted);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
       padding-left: 0.5rem;
     }
 
@@ -97,18 +98,18 @@
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 0.25rem;
+      gap: 0.2rem;
     }
 
     .nav-links a {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      padding: 0.6rem 0.75rem;
+      gap: 0.65rem;
+      padding: 0.5rem 0.65rem;
       border-radius: 8px;
       color: #d1d5db;
       text-decoration: none;
-      font-size: 0.875rem;
+      font-size: 0.82rem;
       font-weight: 500;
       transition: all 0.15s ease;
     }
@@ -128,7 +129,7 @@
     /* Main Content Area */
     main {
       flex: 1;
-      max-width: 1000px;
+      max-width: 1040px;
       margin: 0 auto;
       padding: 2.5rem 2rem 5rem 2rem;
       overflow-y: auto;
@@ -199,6 +200,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
     }
 
     /* Metaphor Box */
@@ -209,15 +212,10 @@
       padding: 1.25rem 1.5rem;
       margin: 1.25rem 0;
     }
-    .metaphor-box.emerald {
-      border-left-color: var(--emerald);
-    }
-    .metaphor-box.rose {
-      border-left-color: var(--rose);
-    }
-    .metaphor-box.amber {
-      border-left-color: var(--amber);
-    }
+    .metaphor-box.emerald { border-left-color: var(--emerald); }
+    .metaphor-box.rose { border-left-color: var(--rose); }
+    .metaphor-box.amber { border-left-color: var(--amber); }
+    .metaphor-box.purple { border-left-color: var(--purple); }
 
     .metaphor-title {
       font-weight: 700;
@@ -231,8 +229,9 @@
     .metaphor-box.emerald .metaphor-title { color: var(--emerald); }
     .metaphor-box.rose .metaphor-title { color: var(--rose); }
     .metaphor-box.amber .metaphor-title { color: var(--amber); }
+    .metaphor-box.purple .metaphor-title { color: var(--purple); }
 
-    /* Interactive Canvas & Grid Containers */
+    /* Interactive Grid */
     .interactive-grid {
       display: grid;
       grid-template-columns: 1fr 340px;
@@ -473,6 +472,17 @@
     .pill-green { background: rgba(16, 185, 129, 0.15); color: var(--emerald); border: 1px solid rgba(16, 185, 129, 0.3); }
     .pill-red { background: rgba(244, 63, 94, 0.15); color: var(--rose); border: 1px solid rgba(244, 63, 94, 0.3); }
     .pill-amber { background: rgba(245, 158, 11, 0.15); color: var(--amber); border: 1px solid rgba(245, 158, 11, 0.3); }
+    .pill-purple { background: rgba(168, 85, 247, 0.15); color: var(--purple); border: 1px solid rgba(168, 85, 247, 0.3); }
+
+    /* Derivation Step Box */
+    .derivation-step {
+      background: #0d1322;
+      border-left: 3px solid var(--primary);
+      padding: 0.85rem 1.1rem;
+      border-radius: 0 8px 8px 0;
+      margin: 0.75rem 0;
+      font-size: 0.92rem;
+    }
 
     /* Responsive */
     @media (max-width: 768px) {
@@ -498,7 +508,7 @@
       <div class="brand-icon">🧠</div>
       <div class="brand-text">
         <h1>Learn AI Core</h1>
-        <p>Calculus & Backprop</p>
+        <p>Calculus & Backpropagation</p>
       </div>
     </div>
 
@@ -512,54 +522,65 @@
     </div>
 
     <div>
-      <div class="nav-group-title">The Neural Net Engine</div>
+      <div class="nav-group-title">📐 Formula Derivations</div>
       <ul class="nav-links">
-        <li><a href="#chain-rule"><span>⚙️</span> 3. The Chain Rule</a></li>
-        <li><a href="#backpropagation"><span>🧠</span> 4. Backpropagation</a></li>
-        <li><a href="#live-playground"><span>🎮</span> 5. Live Trainer Sandbox</a></li>
-        <li><a href="#summary"><span>⚡</span> 6. Summary & Cheatsheet</a></li>
+        <li><a href="#deriv-power"><span>🟩</span> Power Rule (x² &rarr; 2x)</a></li>
+        <li><a href="#deriv-product"><span>🟧</span> Product Rule (uv)'</a></li>
+        <li><a href="#deriv-exp"><span>⚡</span> Why (eˣ)' = eˣ</a></li>
+        <li><a href="#deriv-c"><span>🔍</span> Why "+ C" (Lost Shift)</a></li>
+        <li><a href="#deriv-ftc"><span>🔄</span> FTC: Why F(b) - F(a)</a></li>
+        <li><a href="#deriv-ibp"><span>📦</span> Integration by Parts</a></li>
       </ul>
     </div>
 
-    <div style="margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--text-muted);">
-      Interactive educational lab
+    <div>
+      <div class="nav-group-title">The Neural Net Engine</div>
+      <ul class="nav-links">
+        <li><a href="#chain-rule"><span>⚙️</span> The Chain Rule</a></li>
+        <li><a href="#backpropagation"><span>🧠</span> Backpropagation Math</a></li>
+        <li><a href="#live-playground"><span>🎮</span> Live Trainer Sandbox</a></li>
+        <li><a href="#summary"><span>⚡</span> Summary & Cheatsheet</a></li>
+      </ul>
+    </div>
+
+    <div style="margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.72rem; color: var(--text-muted);">
+      Interactive lab updated live on GitHub
     </div>
   </aside>
 
-  <!-- MAIN ARTICLE & INTERACTIVE SIMULATORS -->
+  <!-- MAIN CONTENT -->
   <main>
 
     <!-- SECTION: INTRO -->
     <section id="intro">
-      <div class="hero-badge">From Zero to Crystal Clear</div>
+      <div class="hero-badge">Zero Memorization • Pure Physical Intuition</div>
       <h2>Calculus & Neural Net Backpropagation</h2>
-      <p style="font-size: 1.15rem; color: #e5e7eb;">
-        Many people are intimidated by the scary symbols in calculus: <em>dy/dx</em>, <em>&int;</em>, <em>&part;</em>, and <em>&nabla;</em>.
-        In reality, these are just formal names for <strong>two simple actions</strong> you do naturally every single day:
-        <strong>measuring a speedometer reading</strong> and <strong>filling up a container</strong>.
+      <p style="font-size: 1.12rem; color: #e5e7eb;">
+        Many textbooks teach calculus by asking you to memorize cryptic symbols like <em>dy/dx</em>, <em>&int;</em>, <em>&part;</em>, and formulas like <em>d/dx(xⁿ) = n·xⁿ⁻¹</em>.
+        Here, we derive <strong>every single formula visually using geometric shapes</strong> (expanding squares, partitioned rectangles, and water tanks) so it becomes intuitive and unforgettable.
       </p>
 
       <div class="metaphor-box">
-        <div class="metaphor-title">🚗 The Road Trip Analogy (The Whole Secret in 3 Seconds)</div>
+        <div class="metaphor-title">🚗 The Road Trip Metaphor (The Entire Mystery in 3 Seconds)</div>
         <table class="comparison-table" style="margin: 0.5rem 0;">
           <thead>
             <tr>
               <th>Concept</th>
               <th>The Question You Ask</th>
               <th>Car Dashboard</th>
-              <th>Calculus Name</th>
+              <th>Calculus Meaning</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td><span class="pill pill-blue">Rate of Change</span></td>
-              <td><em>"Right at this millisecond, how fast am I moving?"</em></td>
+              <td><em>"Right at this millisecond, how fast is my car moving?"</em></td>
               <td><strong>Speedometer</strong></td>
               <td><strong>Differentiation</strong> (dy/dx)</td>
             </tr>
             <tr>
               <td><span class="pill pill-green">Accumulation</span></td>
-              <td><em>"If I know my speed at every second, how far did I travel?"</em></td>
+              <td><em>"If I know my speed at every millisecond, how far did I travel?"</em></td>
               <td><strong>Odometer</strong></td>
               <td><strong>Integration</strong> (&int; f(t) dt)</td>
             </tr>
@@ -576,14 +597,14 @@
 
     <!-- SECTION 1: DIFFERENTIATION -->
     <section id="differentiation">
-      <div class="hero-badge" style="color: var(--primary); background: rgba(56,189,248,0.1);">Step 1 of 4</div>
+      <div class="hero-badge" style="color: var(--primary); background: rgba(56,189,248,0.1);">Interactive Lab</div>
       <h2>📈 What is Differentiation? (The "Nudge" Test)</h2>
       <p>
         Imagine you have a machine with an input knob <strong>x</strong> and a dial <strong>y = f(x)</strong>.
         Differentiation answers only one question:
       </p>
       <div style="background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.2); padding: 1rem 1.25rem; border-radius: 10px; margin-bottom: 1.5rem;">
-        <strong style="color: var(--primary); font-size: 1.05rem;">The Golden Rule of Differentiation:</strong>
+        <strong style="color: var(--primary); font-size: 1.05rem;">The Golden Definition of a Derivative:</strong>
         <p style="margin: 0.25rem 0 0 0; color: #e0f2fe;">
           <em>"If I nudge the knob x forward by a tiny fraction &Delta;x, by how much does the dial y react (&Delta;y)?"</em>
         </p>
@@ -596,12 +617,10 @@
         </div>
 
         <div class="interactive-grid">
-          <!-- Canvas Plot -->
           <div class="canvas-container">
             <canvas id="diffCanvas"></canvas>
           </div>
 
-          <!-- Controls & Math Readout -->
           <div class="controls-panel">
             <div class="control-group">
               <div class="control-label">
@@ -644,38 +663,21 @@
 
             <div style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.4;">
               👉 <strong>Notice:</strong> Drag the <span style="color:var(--rose)">Nudge Size</span> slider towards <strong>0.01</strong>.
-              The pink secant line snaps seamlessly onto the green tangent line! That is the limit definition of a derivative:
+              The pink secant line snaps seamlessly onto the green tangent line! That is the limit definition:
               <br><code style="color:var(--primary)">dy/dx = lim(&Delta;x&rarr;0) [f(x+&Delta;x) - f(x)] / &Delta;x</code>
             </div>
           </div>
         </div>
       </div>
-
-      <h3>Why is this vital for Neural Networks?</h3>
-      <p>
-        In deep learning, every neuron has a weight knob <em>w</em>. We test:
-        <em>"If I turn knob w up by 0.001, does my prediction error jump up or drop down?"</em>
-        The derivative &part;Error/&part;w gives us the exact answer!
-      </p>
     </section>
 
     <!-- SECTION 2: INTEGRATION -->
     <section id="integration">
-      <div class="hero-badge" style="color: var(--emerald); background: rgba(16,185,129,0.1);">Step 2 of 4</div>
+      <div class="hero-badge" style="color: var(--emerald); background: rgba(16,185,129,0.1);">Interactive Lab</div>
       <h2>📊 What is Integration? (The "Accumulation" Machine)</h2>
       <p>
         If differentiation is slicing a loaf of bread into paper-thin slices, <strong>integration is gluing those slices back together to rebuild the loaf</strong>.
       </p>
-
-      <div class="metaphor-box emerald">
-        <div class="metaphor-title">🚰 Intuition: The Leaky Faucet</div>
-        <p style="margin: 0; color: #d1fae5; font-size: 0.95rem;">
-          If water drips at an uneven rate (say 3 ml/sec then 7 ml/sec then 1 ml/sec),
-          how much water is in the bucket after 10 seconds?
-          You can't just multiply rate &times; time once because the rate was changing constantly!
-          Instead, you multiply the rate in each tiny slice of time and <strong>sum them up</strong>. That summation is an <strong>integral</strong>.
-        </p>
-      </div>
 
       <div class="card">
         <div class="card-title">
@@ -734,21 +736,364 @@
           </div>
         </div>
       </div>
+    </section>
 
-      <div class="metaphor-box amber">
-        <div class="metaphor-title">🔄 The Fundamental Theorem of Calculus</div>
-        <p style="margin: 0; color: #fef3c7; font-size: 0.95rem;">
-          Differentiation takes a curve and measures its instantaneous slope. Integration takes the slopes and measures the total accumulated curve.
-          They are exact inverse operations of each other:
-          <br><br>
-          <strong style="color: #fff; font-family: monospace;">&int; (df/dx) dx = f(x)</strong>
+    <!-- ========================================================================= -->
+    <!-- NEW CHAPTER: IN-DEPTH FORMULA DERIVATIONS LAB -->
+    <!-- ========================================================================= -->
+
+    <!-- DERIVATION 1: POWER RULE -->
+    <section id="deriv-power">
+      <div class="hero-badge" style="color: var(--primary); background: rgba(56,189,248,0.1);">Visual Derivation 1</div>
+      <h2>🟩 The Power Rule: d/dx (x²) = 2x</h2>
+      <p>
+        Why does the exponent 2 come to the front and decrease to 1?
+        <strong>Look at an actual physical square with side length x.</strong> Its area is <em>A = x²</em>.
+        If we grow the side length by a tiny nudge <em>h</em>, what happens to the area?
+      </p>
+
+      <div class="card">
+        <div class="card-title">
+          <span>Interactive Expanding Square Visualizer</span>
+          <span class="pill pill-blue">Area = x² &rarr; New Area = (x+h)²</span>
+        </div>
+
+        <div class="interactive-grid">
+          <div class="canvas-container">
+            <canvas id="squareCanvas"></canvas>
+          </div>
+
+          <div class="controls-panel">
+            <div class="control-group">
+              <div class="control-label">
+                <span>Side Length (x)</span>
+                <span id="sq-x-disp" class="control-val">3.0</span>
+              </div>
+              <input type="range" id="sq-x-slider" min="1.5" max="4.0" step="0.1" value="3.0">
+            </div>
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>Nudge Border (h)</span>
+                <span id="sq-h-disp" class="control-val" style="color:var(--amber);">0.80</span>
+              </div>
+              <input type="range" id="sq-h-slider" min="0.05" max="1.5" step="0.05" value="0.80">
+            </div>
+
+            <div class="math-card">
+              <div class="math-row">
+                <span style="color:var(--primary);">Original Square (x²):</span>
+                <span id="sq-orig-disp" class="math-val">9.00</span>
+              </div>
+              <div class="math-row">
+                <span style="color:var(--amber);">Two Edge Strips (2·x·h):</span>
+                <span id="sq-strips-disp" class="math-val">4.80</span>
+              </div>
+              <div class="math-row">
+                <span style="color:var(--rose);">Microscopic Corner (h²):</span>
+                <span id="sq-corner-disp" class="math-val">0.64</span>
+              </div>
+              <div class="math-row" style="border-top: 1px solid #374151; padding-top: 0.5rem;">
+                <span style="color:var(--emerald); font-weight:bold;">Total Rate of Change:</span>
+                <span id="sq-rate-disp" class="math-val" style="color:var(--emerald); font-size:1rem;">6.80</span>
+              </div>
+            </div>
+
+            <div style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.4;">
+              👉 <strong>The Proof in 2 Lines:</strong><br>
+              Change in Area &Delta;A = 2·x·h + h²<br>
+              Divide by h: &Delta;A / h = <strong>2x + h</strong><br>
+              As h &rarr; 0, the tiny red corner vanishes into zero: <strong>d/dx (x²) = 2x</strong>!
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="metaphor-box">
+        <div class="metaphor-title">💡 Why x³ becomes 3x² (A 3D Cube!)</div>
+        <p style="margin: 0; color: #e0f2fe; font-size: 0.92rem;">
+          If you have a cube with volume <em>V = x³</em> and you nudge its dimensions by <em>h</em>, the cube expands on its <strong>3 exposed faces</strong>.
+          Each face has area <em>x²</em>. So the volume grows by <strong>3x² · h</strong>! That’s why <em>d/dx (x³) = 3x²</em>.
+          For any dimension <em>n</em>: <strong>d/dx (xⁿ) = n·xⁿ⁻¹</strong>.
         </p>
+      </div>
+    </section>
+
+    <!-- DERIVATION 2: PRODUCT RULE -->
+    <section id="deriv-product">
+      <div class="hero-badge" style="color: var(--amber); background: rgba(245,158,11,0.1);">Visual Derivation 2</div>
+      <h2>🟧 The Product Rule: d/dx [u · v] = u'v + uv'</h2>
+      <p>
+        Why isn't the derivative of <em>u &times; v</em> simply <em>u' &times; v'</em>?
+        Because <em>u &times; v</em> is the <strong>area of a rectangle with width u and height v</strong>!
+        If both width and height are expanding simultaneously, how does the rectangle grow?
+      </p>
+
+      <div class="card">
+        <div class="card-title">
+          <span>Interactive Expanding Rectangle (Product Rule)</span>
+          <span class="pill pill-amber">Area = u · v</span>
+        </div>
+
+        <div class="interactive-grid">
+          <div class="canvas-container">
+            <canvas id="rectCanvas"></canvas>
+          </div>
+
+          <div class="controls-panel">
+            <div class="control-group">
+              <div class="control-label">
+                <span>Width (u)</span>
+                <span id="pr-u-disp" class="control-val">3.0</span>
+              </div>
+              <input type="range" id="pr-u-slider" min="1.5" max="4.0" step="0.1" value="3.0">
+            </div>
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>Height (v)</span>
+                <span id="pr-v-disp" class="control-val" style="color:var(--emerald);">2.0</span>
+              </div>
+              <input type="range" id="pr-v-slider" min="1.0" max="3.5" step="0.1" value="2.0">
+            </div>
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>Width Expansion (&Delta;u)</span>
+                <span id="pr-du-disp" class="control-val" style="color:var(--amber);">0.8</span>
+              </div>
+              <input type="range" id="pr-du-slider" min="0.1" max="1.5" step="0.05" value="0.8">
+            </div>
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>Height Expansion (&Delta;v)</span>
+                <span id="pr-dv-disp" class="control-val" style="color:var(--rose);">0.6</span>
+              </div>
+              <input type="range" id="pr-dv-slider" min="0.1" max="1.5" step="0.05" value="0.6">
+            </div>
+
+            <div class="math-card">
+              <div class="math-row">
+                <span style="color:var(--amber);">Strip 1 (v &middot; &Delta;u):</span>
+                <span id="pr-strip1-disp" class="math-val">1.60</span>
+              </div>
+              <div class="math-row">
+                <span style="color:var(--emerald);">Strip 2 (u &middot; &Delta;v):</span>
+                <span id="pr-strip2-disp" class="math-val">1.80</span>
+              </div>
+              <div class="math-row">
+                <span style="color:var(--rose);">Corner (&Delta;u &middot; &Delta;v):</span>
+                <span id="pr-corner-disp" class="math-val">0.48</span>
+              </div>
+              <div class="math-row" style="border-top: 1px solid #374151; padding-top: 0.5rem;">
+                <span style="color:#fff; font-weight:bold;">&Delta;Area / &Delta;t:</span>
+                <span id="pr-total-disp" class="math-val" style="color:var(--primary); font-size:0.95rem;">v&middot;u' + u&middot;v'</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="derivation-step">
+        <strong>The Step-by-Step Proof:</strong>
+        <p style="margin: 0.35rem 0 0 0; color: #d1d5db;">
+          Change in Area = <span style="color:var(--amber)">v &middot; &Delta;u</span> (width stretch) + <span style="color:var(--emerald)">u &middot; &Delta;v</span> (height stretch) + <span style="color:var(--rose)">&Delta;u &middot; &Delta;v</span> (corner).<br>
+          Divide by &Delta;t: &Delta;Area/&Delta;t = v(&Delta;u/&Delta;t) + u(&Delta;v/&Delta;t) + &Delta;u(&Delta;v/&Delta;t).<br>
+          As &Delta;t &rarr; 0, &Delta;u shrinks to 0, killing the corner piece. We are left with: <strong>(u &middot; v)' = u'v + uv'</strong>!
+        </p>
+      </div>
+    </section>
+
+    <!-- DERIVATION 3: EXPONENTIAL e^x -->
+    <section id="deriv-exp">
+      <div class="hero-badge" style="color: var(--emerald); background: rgba(16,185,129,0.1);">Visual Derivation 3</div>
+      <h2>⚡ Why (eˣ)' = eˣ: The Self-Mirroring Curve</h2>
+      <p>
+        Every other curve in mathematics changes its slope as it grows. What makes the number <em>e &approx; 2.71828</em> miraculous is that 
+        <strong>at every single point on eˣ, its height and its instantaneous slope are EXACTLY IDENTICAL</strong>!
+      </p>
+
+      <div class="card">
+        <div class="card-title">
+          <span>Interactive eˣ Slope & Height Mirror</span>
+          <span class="pill pill-green">Slope = Height</span>
+        </div>
+
+        <div class="interactive-grid">
+          <div class="canvas-container">
+            <canvas id="expCanvas"></canvas>
+          </div>
+
+          <div class="controls-panel">
+            <div class="control-group">
+              <div class="control-label">
+                <span>Position (x)</span>
+                <span id="exp-x-disp" class="control-val">1.20</span>
+              </div>
+              <input type="range" id="exp-x-slider" min="-1.0" max="2.2" step="0.05" value="1.20">
+            </div>
+
+            <div class="math-card">
+              <div class="math-row">
+                <span style="color:var(--primary);">Current Height y = eˣ:</span>
+                <span id="exp-height-disp" class="math-val" style="font-size:1.1rem; color:var(--primary);">3.320</span>
+              </div>
+              <div class="math-row">
+                <span style="color:var(--emerald);">Instantaneous Slope dy/dx:</span>
+                <span id="exp-slope-disp" class="math-val" style="font-size:1.1rem; color:var(--emerald);">3.320</span>
+              </div>
+              <div class="math-row" style="border-top: 1px solid #374151; padding-top: 0.5rem;">
+                <span style="color:var(--text-muted);">Difference:</span>
+                <span class="math-val" style="color:var(--emerald);">0.0000 (Exact match)</span>
+              </div>
+            </div>
+
+            <div style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.4;">
+              👉 <strong>Drag the slider!</strong> Watch how whether the curve is high or low, the slope of the dashed tangent line is always identical to the vertical height of the dot.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DERIVATION 4: WHY +C -->
+    <section id="deriv-c">
+      <div class="hero-badge" style="color: var(--rose); background: rgba(244,63,94,0.1);">Visual Derivation 4</div>
+      <h2>🔍 Why "+ C"? The Lost Vertical Shift Detective</h2>
+      <p>
+        Every student asks: <em>"Why do teachers deduct points if I forget + C in an integral?"</em>
+        Here is the geometric reason: <strong>Differentiation is a shredder of vertical information.</strong>
+      </p>
+
+      <div class="card">
+        <div class="card-title">
+          <span>Interactive Shift Visualizer: Watch the Derivative Stay Frozen</span>
+          <span class="pill pill-red">f(x) = x² + C</span>
+        </div>
+
+        <div class="interactive-grid">
+          <div class="canvas-container">
+            <canvas id="shiftCanvas"></canvas>
+          </div>
+
+          <div class="controls-panel">
+            <div class="control-group">
+              <div class="control-label">
+                <span>Vertical Shift (C)</span>
+                <span id="c-val-disp" class="control-val" style="color:var(--rose);">3.0</span>
+              </div>
+              <input type="range" id="c-slider" min="-3.0" max="6.0" step="0.2" value="3.0">
+            </div>
+
+            <div class="math-card">
+              <div class="math-row">
+                <span style="color:var(--text-muted);">Original Curve:</span>
+                <span id="c-func-disp" class="math-val" style="color:var(--primary);">f(x) = x² + 3.0</span>
+              </div>
+              <div class="math-row">
+                <span style="color:var(--text-muted);">Derivative f'(x):</span>
+                <span class="math-val" style="color:var(--emerald); font-size:1.05rem;">2x (Unchanged!)</span>
+              </div>
+            </div>
+
+            <div style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.4;">
+              👉 <strong>Drag the C slider:</strong> The blue curve moves up and down across the entire screen. But look at the bottom green slope line: <strong>IT NEVER MOVES!</strong><br>
+              Because the slopes of x², x²+3, and x²-5 are 100% identical, going backward via integration (&int; 2x dx) CANNOT know where the curve was vertically. That's why we write <strong>x² + C</strong>!
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DERIVATION 5: FTC -->
+    <section id="deriv-ftc">
+      <div class="hero-badge" style="color: var(--purple); background: rgba(168,85,247,0.1);">Visual Derivation 5</div>
+      <h2>🔄 The Fundamental Theorem: Why F(b) - F(a)?</h2>
+      <p>
+        Why do we calculate an area by finding the antiderivative <em>F(x)</em> and subtracting <em>F(b) - F(a)</em>?
+        The secret is the <strong>telescoping domino effect</strong>.
+      </p>
+
+      <div class="metaphor-box purple">
+        <div class="metaphor-title">🧱 The Domino Cancellation Proof</div>
+        <p style="color: #f3e8ff; font-size: 0.95rem; margin-bottom: 0.5rem;">
+          Break the distance from <em>a</em> to <em>b</em> into thousands of tiny step increments:
+        </p>
+        <div style="background: rgba(0,0,0,0.4); padding: 0.85rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem; color: #fff; line-height: 1.6;">
+          Total Net Change = [F(x₁) - F(a)] + [F(x₂) - F(x₁)] + [F(x₃) - F(x₂)] + ... + [F(b) - F(xₙ₋₁)]
+        </div>
+        <p style="color: #f3e8ff; font-size: 0.92rem; margin-top: 0.5rem;">
+          Notice that every single middle term appears once with a plus sign and once with a minus sign! They all cancel out in a domino collapse, leaving only:
+          <strong style="color: var(--primary);">F(b) - F(a)</strong>.
+          And since each microscopic step is <em>F'(x)·dx = f(x)·dx</em> (the area of one tiny slice), the sum of all slices equals <strong>F(b) - F(a)</strong>!
+        </p>
+      </div>
+    </section>
+
+    <!-- DERIVATION 6: INTEGRATION BY PARTS -->
+    <section id="deriv-ibp">
+      <div class="hero-badge" style="color: var(--amber); background: rgba(245,158,11,0.1);">Visual Derivation 6</div>
+      <h2>📦 Integration by Parts: &int; u dv = u·v - &int; v du</h2>
+      <p>
+        Integration by Parts looks like a scary formula to memorize. But geometrically, it is literally:
+        <br><strong style="color:var(--primary); font-size:1.1rem;">"Area 1 = The Total Box Area MINUS Area 2"</strong>!
+      </p>
+
+      <div class="card">
+        <div class="card-title">
+          <span>The 2D Partitioned Box Visualizer</span>
+          <span class="pill pill-amber">&int; u dv = Total Box - &int; v du</span>
+        </div>
+
+        <div class="interactive-grid">
+          <div class="canvas-container">
+            <canvas id="ibpCanvas"></canvas>
+          </div>
+
+          <div class="controls-panel">
+            <div class="control-group">
+              <div class="control-label">
+                <span>Upper Bound u</span>
+                <span id="ibp-u-disp" class="control-val">3.5</span>
+              </div>
+              <input type="range" id="ibp-u-slider" min="2.0" max="4.5" step="0.1" value="3.5">
+            </div>
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>Upper Bound v</span>
+                <span id="ibp-v-disp" class="control-val" style="color:var(--emerald);">2.8</span>
+              </div>
+              <input type="range" id="ibp-v-slider" min="1.5" max="3.8" step="0.1" value="2.8">
+            </div>
+
+            <div class="math-card">
+              <div class="math-row">
+                <span style="color:#fff;">Entire Outer Box (u &middot; v):</span>
+                <span id="ibp-box-disp" class="math-val" style="color:#fff;">9.80</span>
+              </div>
+              <div class="math-row">
+                <span style="color:var(--primary);">Area 1 (&int; u dv):</span>
+                <span id="ibp-a1-disp" class="math-val" style="color:var(--primary);">4.90</span>
+              </div>
+              <div class="math-row">
+                <span style="color:var(--emerald);">Area 2 (&int; v du):</span>
+                <span id="ibp-a2-disp" class="math-val" style="color:var(--emerald);">4.90</span>
+              </div>
+              <div class="math-row" style="border-top: 1px solid #374151; padding-top: 0.5rem;">
+                <span style="color:var(--amber); font-weight:bold;">Area 1 = Box - Area 2:</span>
+                <span class="math-val" style="color:var(--amber);">True</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- SECTION 3: THE CHAIN RULE -->
     <section id="chain-rule">
-      <div class="hero-badge" style="color: var(--amber); background: rgba(245,158,11,0.1);">Step 3 of 4</div>
+      <div class="hero-badge" style="color: var(--amber); background: rgba(245,158,11,0.1);">Connecting The Gears</div>
       <h2>⚙️ The Chain Rule: Connecting the Gears</h2>
       <p>
         Neural networks are not single functions; they are <strong>chains of functions nested inside each other</strong>:
@@ -775,21 +1120,16 @@
           dC/dA = (dC/dB) &times; (dB/dA) = 4 &times; 3 = <strong>12</strong>
         </div>
       </div>
-
-      <p>
-        <strong>That's the entire Chain Rule!</strong> To find the derivative across a chain of nodes, you simply <strong>multiply all the local derivatives between them</strong>.
-      </p>
     </section>
 
     <!-- SECTION 4: BACKPROPAGATION -->
     <section id="backpropagation">
-      <div class="hero-badge" style="color: var(--rose); background: rgba(244,63,94,0.1);">Step 4 of 4</div>
+      <div class="hero-badge" style="color: var(--rose); background: rgba(244,63,94,0.1);">The Core AI Engine</div>
       <h2>🧠 Backpropagation: The Complete Math with Real Numbers</h2>
       <p>
-        Now let's demystify backpropagation completely. We will calculate every single number by hand for a real neuron, forward and backward.
+        Now let's trace every calculation by hand for a real neuron, forward and backward.
       </p>
 
-      <!-- Interactive DAG Visualization -->
       <div class="card">
         <div class="card-title">
           <span>The Forward & Backward Flow in a Single Neuron</span>
@@ -839,81 +1179,35 @@
         </div>
       </div>
 
-      <h3>Step-by-Step Arithmetic Walkthrough:</h3>
-
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
-        <!-- Forward Pass Card -->
         <div class="card" style="margin:0; border-top: 3px solid var(--primary);">
-          <h4 style="color: var(--primary); margin-bottom: 0.75rem;">
-            ▶ 1. Forward Pass (Prediction)
-          </h4>
+          <h4 style="color: var(--primary); margin-bottom: 0.75rem;">▶ 1. Forward Pass (Prediction)</h4>
           <ol style="margin-left: 1.25rem; font-size: 0.88rem; color: #d1d5db; display: flex; flex-direction: column; gap: 0.75rem;">
-            <li>
-              <strong>Weighted Sum (z):</strong>
-              <br><code style="color:var(--primary)">z = w&middot;x + b = (0.5 &times; 2.0) + 0 = 1.0</code>
-            </li>
-            <li>
-              <strong>Sigmoid Activation (a):</strong>
-              <br><code style="color:var(--amber)">a = 1 / (1 + e⁻¹˙⁰) = 0.731</code>
-            </li>
-            <li>
-              <strong>Error / Loss (L):</strong>
-              <br>Desired output is y = 1.0.
-              <br><code style="color:var(--rose)">L = ½ (0.731 - 1.0)² = 0.0362</code>
-            </li>
+            <li><strong>Weighted Sum (z):</strong><br><code style="color:var(--primary)">z = w&middot;x + b = (0.5 &times; 2.0) + 0 = 1.0</code></li>
+            <li><strong>Sigmoid Activation (a):</strong><br><code style="color:var(--amber)">a = 1 / (1 + e⁻¹˙⁰) = 0.731</code></li>
+            <li><strong>Error / Loss (L):</strong><br><code style="color:var(--rose)">L = ½ (0.731 - 1.0)² = 0.0362</code></li>
           </ol>
         </div>
 
-        <!-- Backward Pass Card -->
         <div class="card" style="margin:0; border-top: 3px solid var(--rose);">
-          <h4 style="color: var(--rose); margin-bottom: 0.75rem;">
-            ◀ 2. Backward Pass (Backprop)
-          </h4>
+          <h4 style="color: var(--rose); margin-bottom: 0.75rem;">◀ 2. Backward Pass (Backprop)</h4>
           <ol style="margin-left: 1.25rem; font-size: 0.88rem; color: #d1d5db; display: flex; flex-direction: column; gap: 0.75rem;">
-            <li>
-              <strong>Loss Gradient (&part;L / &part;a):</strong>
-              <br><code style="color:var(--rose)">&part;L/&part;a = (a - y) = 0.731 - 1.0 = -0.269</code>
-            </li>
-            <li>
-              <strong>Activation Gradient (&part;a / &part;z):</strong>
-              <br><code style="color:var(--amber)">&part;a/&part;z = a(1 - a) = 0.731 &times; 0.269 = 0.1966</code>
-            </li>
-            <li>
-              <strong>Weight Gradient (&part;z / &part;w):</strong>
-              <br><code style="color:var(--primary)">&part;z/&part;w = x = 2.0</code>
-            </li>
+            <li><strong>Loss Gradient (&part;L / &part;a):</strong><br><code style="color:var(--rose)">&part;L/&part;a = (a - y) = 0.731 - 1.0 = -0.269</code></li>
+            <li><strong>Activation Gradient (&part;a / &part;z):</strong><br><code style="color:var(--amber)">&part;a/&part;z = a(1 - a) = 0.731 &times; 0.269 = 0.1966</code></li>
+            <li><strong>Weight Gradient (&part;z / &part;w):</strong><br><code style="color:var(--primary)">&part;z/&part;w = x = 2.0</code></li>
           </ol>
         </div>
       </div>
 
-      <!-- Final Chain Multiply -->
-      <div class="card" style="background: rgba(15, 23, 42, 0.9); border: 1px solid var(--primary);">
+      <div class="card" style="background: rgba(15, 23, 42, 0.9); border: 1px solid var(--primary); margin-top: 1.5rem;">
         <div style="font-weight: 700; color: #fff; margin-bottom: 0.5rem;">
           🎯 The Grand Chain Multiplication:
         </div>
-        <p style="font-family: monospace; font-size: 1rem; color: #e0f2fe; margin-bottom: 0.5rem;">
-          &part;L/&part;w = (&part;L/&part;a) &times; (&part;a/&part;z) &times; (&part;z/&part;w)
-        </p>
-        <p style="font-family: monospace; font-size: 1.05rem; color: var(--emerald); margin-bottom: 0.75rem;">
+        <p style="font-family: monospace; font-size: 1.05rem; color: var(--emerald); margin-bottom: 0.5rem;">
           &part;L/&part;w = (-0.269) &times; (0.1966) &times; (2.0) = <strong>-0.1058</strong>
         </p>
         <p style="font-size: 0.85rem; color: #9ca3af; margin: 0;">
-          💡 <strong>Physical Meaning:</strong> The gradient is negative (-0.1058). That proves that <strong>increasing w will decrease the error!</strong>
-        </p>
-      </div>
-
-      <!-- Update formula -->
-      <div class="card">
-        <h4 style="color: #fff; margin-bottom: 0.5rem;">3. Updating the Weight (Gradient Descent)</h4>
-        <p style="font-size: 0.9rem; color: #d1d5db;">
-          We take a step in the direction that lowers the loss, scaled by learning rate &eta; = 0.1:
-        </p>
-        <div style="background: #030712; padding: 0.85rem; border-radius: 8px; font-family: monospace; font-size: 0.95rem; color: #38bdf8;">
-          w_new = w_old - &eta; &middot; (&part;L/&part;w)<br>
-          w_new = 0.5 - (0.1) &middot; (-0.1058) = <strong>0.51058</strong>
-        </div>
-        <p style="font-size: 0.85rem; color: var(--emerald); margin-top: 0.75rem; margin-bottom: 0;">
-          ✓ The weight increased from 0.5 &rarr; 0.51058. If you re-evaluate the error, it dropped from 0.0362 &rarr; 0.0349!
+          💡 <strong>Physical Meaning:</strong> The gradient is negative (-0.1058). Increasing w will decrease the error!
         </p>
       </div>
     </section>
@@ -940,12 +1234,10 @@
         </div>
 
         <div class="interactive-grid">
-          <!-- Realtime Loss History Canvas -->
           <div class="canvas-container">
             <canvas id="lossCanvas"></canvas>
           </div>
 
-          <!-- Controls & Realtime Monitor -->
           <div class="controls-panel">
             <div class="control-group">
               <div class="control-label">
@@ -990,18 +1282,17 @@
       </div>
     </section>
 
-    <!-- SECTION 6: SUMMARY & CHEATSHEET -->
+    <!-- SECTION 6: SUMMARY -->
     <section id="summary">
       <div class="hero-badge" style="color: var(--purple); background: rgba(168,85,247,0.1);">Knowledge Check</div>
       <h2>⚡ Ultimate Mental Model & Cheatsheet</h2>
 
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin-top: 1.5rem;">
-        
         <div class="card" style="margin:0;">
           <h3 style="color: var(--primary); font-size: 1.1rem; margin-top: 0;">1. Differentiation</h3>
           <p style="font-size: 0.85rem; color: #d1d5db;">
             <strong>What is it?</strong> The instantaneous slope / sensitivity.<br>
-            <strong>Intuition:</strong> "If I nudge knob X, how much does dial Y swing?"<br>
+            <strong>Visual proof:</strong> Outer border strips on expanding shapes.<br>
             <strong>Role in AI:</strong> Tells which direction to adjust each parameter to drop error.
           </p>
         </div>
@@ -1010,8 +1301,8 @@
           <h3 style="color: var(--emerald); font-size: 1.1rem; margin-top: 0;">2. Integration</h3>
           <p style="font-size: 0.85rem; color: #d1d5db;">
             <strong>What is it?</strong> Total accumulation / area under curve.<br>
-            <strong>Intuition:</strong> "Adding up thousands of tiny slices into a grand total."<br>
-            <strong>Role in AI:</strong> Expected values, probability density, continuous loss over time.
+            <strong>Visual proof:</strong> Slicing into infinite rectangular strips and adding them up.<br>
+            <strong>Role in AI:</strong> Probability density, continuous expectations, loss integrals.
           </p>
         </div>
 
@@ -1019,29 +1310,8 @@
           <h3 style="color: var(--rose); font-size: 1.1rem; margin-top: 0;">3. Backpropagation</h3>
           <p style="font-size: 0.85rem; color: #d1d5db;">
             <strong>What is it?</strong> The Chain Rule applied backwards efficiently.<br>
-            <strong>Intuition:</strong> Passing blame from the final error back to every early knob.<br>
+            <strong>Visual proof:</strong> Reverse gear multiplication from error back to knobs.<br>
             <strong>Secret Advantage:</strong> Re-uses computed partial derivatives so training is O(N) instead of O(N²)!
-          </p>
-        </div>
-
-      </div>
-
-      <!-- FAQ Section -->
-      <div class="card" style="margin-top: 2rem;">
-        <h3 style="margin-top: 0; color: #fff;">💡 Frequently Asked "Ah-Ha!" Questions</h3>
-        
-        <div style="margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 1rem;">
-          <h4 style="color: var(--primary);">Q: Why not just test each weight numerically by adding 0.0001 and seeing the error?</h4>
-          <p style="font-size: 0.9rem; color: #9ca3af; margin-top: 0.25rem;">
-            A modern neural network (like GPT-4) has over 1,000,000,000,000 weights! If you ran a forward test for each weight individually, one single step would take hundreds of years.
-            <strong>Backpropagation computes the gradient for ALL billions of weights simultaneously in one single backward sweep!</strong>
-          </p>
-        </div>
-
-        <div style="margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 1rem;">
-          <h4 style="color: var(--emerald);">Q: What is a "partial derivative" (&part;) vs a normal derivative (d)?</h4>
-          <p style="font-size: 0.9rem; color: #9ca3af; margin-top: 0.25rem;">
-            A normal derivative df/dx is for when there is only 1 variable. A partial derivative &part;f/&part;w₁ is for when there are multiple knobs (w₁, w₂, b): you freeze all other knobs in place and nudge only w₁ to see its individual contribution.
           </p>
         </div>
       </div>
@@ -1049,9 +1319,8 @@
 
   </main>
 
-  <!-- JAVASCRIPT SIMULATORS & INTERACTIVITY -->
+  <!-- JAVASCRIPT CODE FOR ALL CANVASES -->
   <script>
-    // Utility for HiDPI Canvases
     function setupCanvas(canvas) {
       const rect = canvas.getBoundingClientRect();
       const dpr = window.devicePixelRatio || 1;
@@ -1063,15 +1332,15 @@
       return { ctx, w: rect.width, h: rect.height };
     }
 
-    // =========================================================================
-    // 1. DIFFERENTIATION INTERACTIVE CANVAS
-    // =========================================================================
+    function f(x) { return x * x; }
+    function df(x) { return 2 * x; }
+
+    // ==========================================
+    // 1. DIFFERENTIATION LAB
+    // ==========================================
     const diffCanvas = document.getElementById('diffCanvas');
     const diffXSlider = document.getElementById('diff-x-slider');
     const diffDxSlider = document.getElementById('diff-dx-slider');
-
-    function f(x) { return x * x; }
-    function df(x) { return 2 * x; }
 
     function drawDifferentiation() {
       const { ctx, w, h } = setupCanvas(diffCanvas);
@@ -1101,28 +1370,22 @@
       function toX(x) { return pad + ((x - minX) / (maxX - minX)) * (w - pad * 2); }
       function toY(y) { return (h - pad) - ((y - minY) / (maxY - minY)) * (h - pad * 2); }
 
-      // Grid
       ctx.strokeStyle = '#1e293b';
       ctx.lineWidth = 1;
       ctx.beginPath();
       for (let x = 0; x <= 3.5; x += 1) {
-        ctx.moveTo(toX(x), toY(0));
-        ctx.lineTo(toX(x), toY(maxY));
+        ctx.moveTo(toX(x), toY(0)); ctx.lineTo(toX(x), toY(maxY));
       }
       for (let y = 0; y <= 12; y += 3) {
-        ctx.moveTo(toX(0), toY(y));
-        ctx.lineTo(toX(maxX), toY(y));
+        ctx.moveTo(toX(0), toY(y)); ctx.lineTo(toX(maxX), toY(y));
       }
       ctx.stroke();
 
-      // Axes
       ctx.strokeStyle = '#475569';
       ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.moveTo(toX(0), toY(0));
-      ctx.lineTo(toX(maxX), toY(0));
-      ctx.moveTo(toX(0), toY(0));
-      ctx.lineTo(toX(0), toY(maxY));
+      ctx.moveTo(toX(0), toY(0)); ctx.lineTo(toX(maxX), toY(0));
+      ctx.moveTo(toX(0), toY(0)); ctx.lineTo(toX(0), toY(maxY));
       ctx.stroke();
 
       // Curve
@@ -1130,14 +1393,12 @@
       ctx.lineWidth = 3;
       ctx.beginPath();
       for (let px = 0; px <= maxX; px += 0.05) {
-        const sx = toX(px);
-        const sy = toY(f(px));
-        if (px === 0) ctx.moveTo(sx, sy);
-        else ctx.lineTo(sx, sy);
+        const sx = toX(px), sy = toY(f(px));
+        if (px === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
       }
       ctx.stroke();
 
-      // Tangent Line
+      // Tangent line
       ctx.strokeStyle = '#10b981';
       ctx.lineWidth = 2;
       ctx.setLineDash([4, 4]);
@@ -1155,64 +1416,28 @@
 
       ctx.fillStyle = 'rgba(244, 63, 94, 0.15)';
       ctx.beginPath();
-      ctx.moveTo(p1x, p1y);
-      ctx.lineTo(cornerX, cornerY);
-      ctx.lineTo(p2x, p2y);
-      ctx.closePath();
+      ctx.moveTo(p1x, p1y); ctx.lineTo(cornerX, cornerY); ctx.lineTo(p2x, p2y); ctx.closePath();
       ctx.fill();
 
-      // Secant Line
+      ctx.strokeStyle = '#f43f5e'; ctx.lineWidth = 2.5;
+      ctx.beginPath(); ctx.moveTo(p1x, p1y); ctx.lineTo(p2x, p2y); ctx.stroke();
+
+      ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(p1x, p1y); ctx.lineTo(cornerX, cornerY); ctx.stroke();
+
       ctx.strokeStyle = '#f43f5e';
-      ctx.lineWidth = 2.5;
-      ctx.beginPath();
-      ctx.moveTo(p1x, p1y);
-      ctx.lineTo(p2x, p2y);
-      ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cornerX, cornerY); ctx.lineTo(p2x, p2y); ctx.stroke();
 
-      // Delta X
-      ctx.strokeStyle = '#f59e0b';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(p1x, p1y);
-      ctx.lineTo(cornerX, cornerY);
-      ctx.stroke();
-
-      // Delta Y
-      ctx.strokeStyle = '#f43f5e';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(cornerX, cornerY);
-      ctx.lineTo(p2x, p2y);
-      ctx.stroke();
-
-      // Points
-      ctx.fillStyle = '#38bdf8';
-      ctx.beginPath();
-      ctx.arc(p1x, p1y, 6, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.fillStyle = '#f43f5e';
-      ctx.beginPath();
-      ctx.arc(p2x, p2y, 6, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Text Labels
-      ctx.fillStyle = '#f9fafb';
-      ctx.font = '11px monospace';
-      ctx.fillText(`(x, f(x))`, p1x - 35, p1y - 12);
-      ctx.fillText(`(x+Δx, f(x+Δx))`, p2x - 45, p2y - 12);
-      ctx.fillStyle = '#f59e0b';
-      ctx.fillText(`Δx = ${dxVal.toFixed(2)}`, (p1x + cornerX) / 2 - 25, cornerY + 16);
-      ctx.fillStyle = '#f43f5e';
-      ctx.fillText(`Δy = ${dy.toFixed(2)}`, cornerX + 8, (cornerY + p2y) / 2);
+      ctx.fillStyle = '#38bdf8'; ctx.beginPath(); ctx.arc(p1x, p1y, 5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#f43f5e'; ctx.beginPath(); ctx.arc(p2x, p2y, 5, 0, Math.PI * 2); ctx.fill();
     }
 
     diffXSlider.addEventListener('input', drawDifferentiation);
     diffDxSlider.addEventListener('input', drawDifferentiation);
 
-    // =========================================================================
-    // 2. INTEGRATION INTERACTIVE CANVAS
-    // =========================================================================
+    // ==========================================
+    // 2. INTEGRATION LAB
+    // ==========================================
     const intCanvas = document.getElementById('intCanvas');
     const intNSlider = document.getElementById('int-n-slider');
     const intBSlider = document.getElementById('int-b-slider');
@@ -1249,7 +1474,6 @@
       function toX(x) { return pad + ((x - minX) / (maxX - minX)) * (w - pad * 2); }
       function toY(y) { return (h - pad) - ((y - minY) / (maxY - minY)) * (h - pad * 2); }
 
-      // Draw Riemann Rectangles
       for (let i = 0; i < N; i++) {
         const x_left = a + i * dx;
         const x_right = a + (i + 1) * dx;
@@ -1267,49 +1491,378 @@
         ctx.strokeRect(rx, ry, rw, rh);
       }
 
-      // Curve
       ctx.strokeStyle = '#38bdf8';
       ctx.lineWidth = 3;
       ctx.beginPath();
       for (let px = 0; px <= maxX; px += 0.05) {
-        const sx = toX(px);
-        const sy = toY(f(px));
-        if (px === 0) ctx.moveTo(sx, sy);
-        else ctx.lineTo(sx, sy);
+        const sx = toX(px), sy = toY(f(px));
+        if (px === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
       }
       ctx.stroke();
 
-      // Axes
-      ctx.strokeStyle = '#475569';
-      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#475569'; ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.moveTo(toX(0), toY(0));
-      ctx.lineTo(toX(maxX), toY(0));
-      ctx.moveTo(toX(0), toY(0));
-      ctx.lineTo(toX(0), toY(maxY));
+      ctx.moveTo(toX(0), toY(0)); ctx.lineTo(toX(maxX), toY(0));
+      ctx.moveTo(toX(0), toY(0)); ctx.lineTo(toX(0), toY(maxY));
       ctx.stroke();
 
-      // Bound line at x = b
-      ctx.strokeStyle = '#f59e0b';
-      ctx.lineWidth = 2;
-      ctx.setLineDash([4, 4]);
-      ctx.beginPath();
-      ctx.moveTo(toX(b), toY(0));
-      ctx.lineTo(toX(b), toY(f(b)));
-      ctx.stroke();
+      ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 2; ctx.setLineDash([4, 4]);
+      ctx.beginPath(); ctx.moveTo(toX(b), toY(0)); ctx.lineTo(toX(b), toY(f(b))); ctx.stroke();
       ctx.setLineDash([]);
-
-      ctx.fillStyle = '#f59e0b';
-      ctx.font = '11px monospace';
-      ctx.fillText(`b = ${b.toFixed(1)}`, toX(b) - 15, toY(0) + 16);
     }
 
     intNSlider.addEventListener('input', drawIntegration);
     intBSlider.addEventListener('input', drawIntegration);
 
-    // =========================================================================
-    // 3. LIVE SANDBOX & REALTIME LOSS PLOT
-    // =========================================================================
+    // ==========================================
+    // 3. EXPANDING SQUARE (POWER RULE: x² -> 2x)
+    // ==========================================
+    const squareCanvas = document.getElementById('squareCanvas');
+    const sqXSlider = document.getElementById('sq-x-slider');
+    const sqHSlider = document.getElementById('sq-h-slider');
+
+    function drawExpandingSquare() {
+      const { ctx, w, h } = setupCanvas(squareCanvas);
+      const x = parseFloat(sqXSlider.value);
+      const hVal = parseFloat(sqHSlider.value);
+
+      document.getElementById('sq-x-disp').innerText = x.toFixed(1);
+      document.getElementById('sq-h-disp').innerText = hVal.toFixed(2);
+
+      const origArea = x * x;
+      const stripsArea = 2 * x * hVal;
+      const cornerArea = hVal * hVal;
+      const rate = 2 * x + hVal;
+
+      document.getElementById('sq-orig-disp').innerText = origArea.toFixed(2);
+      document.getElementById('sq-strips-disp').innerText = stripsArea.toFixed(2);
+      document.getElementById('sq-corner-disp').innerText = cornerArea.toFixed(2);
+      document.getElementById('sq-rate-disp').innerText = rate.toFixed(2);
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Scale to fit canvas
+      const maxTotal = 6.0;
+      const scale = Math.min((w - 80) / maxTotal, (h - 80) / maxTotal);
+      const startX = 40;
+      const startY = 40;
+
+      const pxX = x * scale;
+      const pxH = hVal * scale;
+
+      // 1. Central Square (x * x)
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.25)';
+      ctx.fillRect(startX, startY, pxX, pxX);
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(startX, startY, pxX, pxX);
+
+      // 2. Right Strip (x * h)
+      ctx.fillStyle = 'rgba(245, 158, 11, 0.35)';
+      ctx.fillRect(startX + pxX, startY, pxH, pxX);
+      ctx.strokeStyle = '#f59e0b';
+      ctx.strokeRect(startX + pxX, startY, pxH, pxX);
+
+      // 3. Bottom Strip (x * h)
+      ctx.fillStyle = 'rgba(245, 158, 11, 0.35)';
+      ctx.fillRect(startX, startY + pxX, pxX, pxH);
+      ctx.strokeStyle = '#f59e0b';
+      ctx.strokeRect(startX, startY + pxX, pxX, pxH);
+
+      // 4. Corner Square (h * h)
+      ctx.fillStyle = 'rgba(244, 63, 94, 0.5)';
+      ctx.fillRect(startX + pxX, startY + pxX, pxH, pxH);
+      ctx.strokeStyle = '#f43f5e';
+      ctx.strokeRect(startX + pxX, startY + pxX, pxH, pxH);
+
+      // Text Annotations
+      ctx.fillStyle = '#f9fafb';
+      ctx.font = '12px monospace';
+      ctx.fillText(`Original x² (${origArea.toFixed(1)})`, startX + pxX / 4, startY + pxX / 2);
+
+      ctx.fillStyle = '#f59e0b';
+      ctx.font = '10px monospace';
+      ctx.fillText(`+x·h`, startX + pxX + 4, startY + pxX / 2);
+      ctx.fillText(`+x·h`, startX + pxX / 2 - 10, startY + pxX + pxH / 2 + 3);
+
+      ctx.fillStyle = '#f43f5e';
+      ctx.fillText(`h²`, startX + pxX + 3, startY + pxX + pxH / 2 + 3);
+    }
+
+    sqXSlider.addEventListener('input', drawExpandingSquare);
+    sqHSlider.addEventListener('input', drawExpandingSquare);
+
+    // ==========================================
+    // 4. EXPANDING RECTANGLE (PRODUCT RULE)
+    // ==========================================
+    const rectCanvas = document.getElementById('rectCanvas');
+    const prUSlider = document.getElementById('pr-u-slider');
+    const prVSlider = document.getElementById('pr-v-slider');
+    const prDUSlider = document.getElementById('pr-du-slider');
+    const prDVSlider = document.getElementById('pr-dv-slider');
+
+    function drawExpandingRectangle() {
+      const { ctx, w, h } = setupCanvas(rectCanvas);
+      const u = parseFloat(prUSlider.value);
+      const v = parseFloat(prVSlider.value);
+      const du = parseFloat(prDUSlider.value);
+      const dv = parseFloat(prDVSlider.value);
+
+      document.getElementById('pr-u-disp').innerText = u.toFixed(1);
+      document.getElementById('pr-v-disp').innerText = v.toFixed(1);
+      document.getElementById('pr-du-disp').innerText = du.toFixed(2);
+      document.getElementById('pr-dv-disp').innerText = dv.toFixed(2);
+
+      const strip1 = v * du;
+      const strip2 = u * dv;
+      const corner = du * dv;
+
+      document.getElementById('pr-strip1-disp').innerText = strip1.toFixed(2);
+      document.getElementById('pr-strip2-disp').innerText = strip2.toFixed(2);
+      document.getElementById('pr-corner-disp').innerText = corner.toFixed(2);
+
+      ctx.clearRect(0, 0, w, h);
+
+      const scale = Math.min((w - 70) / (4.0 + 1.5), (h - 70) / (3.5 + 1.5));
+      const startX = 35;
+      const startY = 35;
+
+      const pxU = u * scale;
+      const pxV = v * scale;
+      const pxDU = du * scale;
+      const pxDV = dv * scale;
+
+      // Base u * v
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.25)';
+      ctx.fillRect(startX, startY, pxU, pxV);
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(startX, startY, pxU, pxV);
+
+      // Strip 1: v * du
+      ctx.fillStyle = 'rgba(245, 158, 11, 0.35)';
+      ctx.fillRect(startX + pxU, startY, pxDU, pxV);
+      ctx.strokeStyle = '#f59e0b';
+      ctx.strokeRect(startX + pxU, startY, pxDU, pxV);
+
+      // Strip 2: u * dv
+      ctx.fillStyle = 'rgba(16, 185, 129, 0.35)';
+      ctx.fillRect(startX, startY + pxV, pxU, pxDV);
+      ctx.strokeStyle = '#10b981';
+      ctx.strokeRect(startX, startY + pxV, pxU, pxDV);
+
+      // Corner: du * dv
+      ctx.fillStyle = 'rgba(244, 63, 94, 0.5)';
+      ctx.fillRect(startX + pxU, startY + pxV, pxDU, pxDV);
+      ctx.strokeStyle = '#f43f5e';
+      ctx.strokeRect(startX + pxU, startY + pxV, pxDU, pxDV);
+
+      ctx.fillStyle = '#f9fafb';
+      ctx.font = '12px monospace';
+      ctx.fillText(`u · v`, startX + pxU / 3, startY + pxV / 2);
+      ctx.fillStyle = '#f59e0b';
+      ctx.fillText(`v·Δu`, startX + pxU + 4, startY + pxV / 2);
+      ctx.fillStyle = '#10b981';
+      ctx.fillText(`u·Δv`, startX + pxU / 3, startY + pxV + pxDV / 2 + 4);
+    }
+
+    prUSlider.addEventListener('input', drawExpandingRectangle);
+    prVSlider.addEventListener('input', drawExpandingRectangle);
+    prDUSlider.addEventListener('input', drawExpandingRectangle);
+    prDVSlider.addEventListener('input', drawExpandingRectangle);
+
+    // ==========================================
+    // 5. EXPONENTIAL (eˣ)' = eˣ
+    // ==========================================
+    const expCanvas = document.getElementById('expCanvas');
+    const expXSlider = document.getElementById('exp-x-slider');
+
+    function drawExponential() {
+      const { ctx, w, h } = setupCanvas(expCanvas);
+      const xVal = parseFloat(expXSlider.value);
+      const yVal = Math.exp(xVal);
+
+      document.getElementById('exp-x-disp').innerText = xVal.toFixed(2);
+      document.getElementById('exp-height-disp').innerText = yVal.toFixed(3);
+      document.getElementById('exp-slope-disp').innerText = yVal.toFixed(3);
+
+      ctx.clearRect(0, 0, w, h);
+
+      const pad = 40;
+      const minX = -1.2, maxX = 2.5;
+      const minY = 0, maxY = 10;
+
+      function toX(x) { return pad + ((x - minX) / (maxX - minX)) * (w - pad * 2); }
+      function toY(y) { return (h - pad) - ((y - minY) / (maxY - minY)) * (h - pad * 2); }
+
+      // Axes
+      ctx.strokeStyle = '#334155'; ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(toX(minX), toY(0)); ctx.lineTo(toX(maxX), toY(0));
+      ctx.moveTo(toX(0), toY(minY)); ctx.lineTo(toX(0), toY(maxY));
+      ctx.stroke();
+
+      // Curve eˣ
+      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3;
+      ctx.beginPath();
+      for (let px = minX; px <= maxX; px += 0.05) {
+        const sx = toX(px), sy = toY(Math.exp(px));
+        if (px === minX) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+      }
+      ctx.stroke();
+
+      // Tangent line at xVal
+      const slope = yVal;
+      ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2.5; ctx.setLineDash([5, 5]);
+      ctx.beginPath();
+      const tanRange = 1.0;
+      ctx.moveTo(toX(xVal - tanRange), toY(yVal - slope * tanRange));
+      ctx.lineTo(toX(xVal + tanRange), toY(yVal + slope * tanRange));
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Vertical drop line (Height)
+      ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(toX(xVal), toY(0)); ctx.lineTo(toX(xVal), toY(yVal)); ctx.stroke();
+
+      // Point Dot
+      ctx.fillStyle = '#f43f5e'; ctx.beginPath(); ctx.arc(toX(xVal), toY(yVal), 6, 0, Math.PI * 2); ctx.fill();
+
+      ctx.fillStyle = '#f59e0b'; ctx.font = '11px monospace';
+      ctx.fillText(`Height = ${yVal.toFixed(2)}`, toX(xVal) + 8, toY(yVal / 2));
+      ctx.fillStyle = '#10b981';
+      ctx.fillText(`Slope = ${yVal.toFixed(2)}`, toX(xVal) - 95, toY(yVal) - 10);
+    }
+
+    expXSlider.addEventListener('input', drawExponential);
+
+    // ==========================================
+    // 6. WHY "+ C" (VERTICAL SHIFT)
+    // ==========================================
+    const shiftCanvas = document.getElementById('shiftCanvas');
+    const cSlider = document.getElementById('c-slider');
+
+    function drawShiftCanvas() {
+      const { ctx, w, h } = setupCanvas(shiftCanvas);
+      const C = parseFloat(cSlider.value);
+
+      document.getElementById('c-val-disp').innerText = (C >= 0 ? '+' : '') + C.toFixed(1);
+      document.getElementById('c-func-disp').innerText = `f(x) = x² ${C >= 0 ? '+' : ''}${C.toFixed(1)}`;
+
+      ctx.clearRect(0, 0, w, h);
+
+      const pad = 35;
+      const minX = -3.0, maxX = 3.0;
+      const minY = -4.0, maxY = 14.0;
+
+      function toX(x) { return pad + ((x - minX) / (maxX - minX)) * (w - pad * 2); }
+      function toY(y) { return (h - pad) - ((y - minY) / (maxY - minY)) * (h - pad * 2); }
+
+      // Axes
+      ctx.strokeStyle = '#334155'; ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(toX(minX), toY(0)); ctx.lineTo(toX(maxX), toY(0));
+      ctx.moveTo(toX(0), toY(minY)); ctx.lineTo(toX(0), toY(maxY));
+      ctx.stroke();
+
+      // 1. Shifted Curve f(x) = x² + C
+      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3;
+      ctx.beginPath();
+      for (let px = minX; px <= maxX; px += 0.05) {
+        const sx = toX(px), sy = toY(px * px + C);
+        if (px === minX) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+      }
+      ctx.stroke();
+
+      // 2. Derivative Curve f'(x) = 2x (Frozen at bottom!)
+      ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      for (let px = minX; px <= maxX; px += 0.05) {
+        const sx = toX(px), sy = toY(2 * px);
+        if (px === minX) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+      }
+      ctx.stroke();
+
+      ctx.fillStyle = '#38bdf8'; ctx.font = '11px monospace';
+      ctx.fillText(`f(x) = x² + (${C.toFixed(1)})`, toX(1.2), toY(1.2 * 1.2 + C) - 10);
+
+      ctx.fillStyle = '#10b981';
+      ctx.fillText(`f'(x) = 2x (Completely Frozen!)`, toX(0.5), toY(2 * 0.5) - 12);
+    }
+
+    cSlider.addEventListener('input', drawShiftCanvas);
+
+    // ==========================================
+    // 7. INTEGRATION BY PARTS PARTITIONED BOX
+    // ==========================================
+    const ibpCanvas = document.getElementById('ibpCanvas');
+    const ibpUSlider = document.getElementById('ibp-u-slider');
+    const ibpVSlider = document.getElementById('ibp-v-slider');
+
+    function drawIBPCanvas() {
+      const { ctx, w, h } = setupCanvas(ibpCanvas);
+      const u = parseFloat(ibpUSlider.value);
+      const v = parseFloat(ibpVSlider.value);
+
+      document.getElementById('ibp-u-disp').innerText = u.toFixed(1);
+      document.getElementById('ibp-v-disp').innerText = v.toFixed(1);
+
+      const totalBox = u * v;
+      // Let's model curve v = (u / maxU) * maxV
+      const a1 = totalBox / 2;
+      const a2 = totalBox / 2;
+
+      document.getElementById('ibp-box-disp').innerText = totalBox.toFixed(2);
+      document.getElementById('ibp-a1-disp').innerText = a1.toFixed(2);
+      document.getElementById('ibp-a2-disp').innerText = a2.toFixed(2);
+
+      ctx.clearRect(0, 0, w, h);
+
+      const pad = 40;
+      const boxW = (w - pad * 2) * (u / 5.0);
+      const boxH = (h - pad * 2) * (v / 4.0);
+
+      const originX = pad;
+      const originY = h - pad;
+
+      // Outer Box (uv)
+      ctx.strokeStyle = '#9ca3af'; ctx.lineWidth = 2;
+      ctx.strokeRect(originX, originY - boxH, boxW, boxH);
+
+      // Draw partition curve
+      ctx.beginPath();
+      ctx.moveTo(originX, originY);
+      ctx.quadraticCurveTo(originX + boxW * 0.7, originY, originX + boxW, originY - boxH);
+      ctx.lineTo(originX + boxW, originY);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.35)';
+      ctx.fill();
+
+      // Top area
+      ctx.beginPath();
+      ctx.moveTo(originX, originY);
+      ctx.quadraticCurveTo(originX + boxW * 0.7, originY, originX + boxW, originY - boxH);
+      ctx.lineTo(originX, originY - boxH);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(16, 185, 129, 0.35)';
+      ctx.fill();
+
+      ctx.fillStyle = '#38bdf8'; ctx.font = '12px monospace';
+      ctx.fillText(`Area 1: ∫ u dv`, originX + boxW * 0.5, originY - boxH * 0.25);
+
+      ctx.fillStyle = '#10b981';
+      ctx.fillText(`Area 2: ∫ v du`, originX + boxW * 0.15, originY - boxH * 0.7);
+
+      ctx.fillStyle = '#fff';
+      ctx.fillText(`Total Rectangle = u · v`, originX + 5, originY - boxH - 8);
+    }
+
+    ibpUSlider.addEventListener('input', drawIBPCanvas);
+    ibpVSlider.addEventListener('input', drawIBPCanvas);
+
+    // ==========================================
+    // 8. LIVE SANDBOX & REALTIME LOSS PLOT
+    // ==========================================
     const lossCanvas = document.getElementById('lossCanvas');
     const sbWSlider = document.getElementById('sb-w-slider');
     const sbYSlider = document.getElementById('sb-y-slider');
@@ -1331,12 +1884,10 @@
       document.getElementById('sb-y-disp').innerText = y.toFixed(2);
       document.getElementById('sb-lr-disp').innerText = lr.toFixed(2);
 
-      // Forward Pass
       const z = w * inputFixedX;
       const a = sigmoid(z);
       const loss = 0.5 * Math.pow(a - y, 2);
 
-      // Backward Pass
       const dL_da = (a - y);
       const da_dz = a * (1 - a);
       const dz_dw = inputFixedX;
@@ -1346,7 +1897,6 @@
       document.getElementById('sb-loss-disp').innerText = loss.toFixed(4);
       document.getElementById('sb-grad-disp').innerText = (dL_dw >= 0 ? '+' : '') + dL_dw.toFixed(4);
 
-      // Also update DAG section numbers
       document.getElementById('dag-w-text').innerText = w.toFixed(2);
       document.getElementById('dag-z-val').innerText = z.toFixed(2);
       document.getElementById('dag-a-val').innerText = a.toFixed(3);
@@ -1363,48 +1913,36 @@
       ctx.clearRect(0, 0, w, h);
 
       const pad = 40;
-      // Grid
-      ctx.strokeStyle = '#1e293b';
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
       ctx.beginPath();
       for (let y = 0; y <= 0.5; y += 0.1) {
         const sy = (h - pad) - (y / 0.5) * (h - pad * 2);
-        ctx.moveTo(pad, sy);
-        ctx.lineTo(w - pad, sy);
+        ctx.moveTo(pad, sy); ctx.lineTo(w - pad, sy);
       }
       ctx.stroke();
 
-      // Axes
-      ctx.strokeStyle = '#475569';
-      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#475569'; ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.moveTo(pad, pad);
-      ctx.lineTo(pad, h - pad);
-      ctx.lineTo(w - pad, h - pad);
+      ctx.moveTo(pad, pad); ctx.lineTo(pad, h - pad); ctx.lineTo(w - pad, h - pad);
       ctx.stroke();
 
-      ctx.fillStyle = '#9ca3af';
-      ctx.font = '10px monospace';
+      ctx.fillStyle = '#9ca3af'; ctx.font = '10px monospace';
       ctx.fillText("Loss", pad - 10, pad - 10);
       ctx.fillText("Epochs ➔", w - pad - 40, h - pad + 20);
 
       if (lossHistory.length < 2) {
-        ctx.fillStyle = '#64748b';
-        ctx.font = '12px sans-serif';
+        ctx.fillStyle = '#64748b'; ctx.font = '12px sans-serif';
         ctx.fillText("Click 'Step 1 Update' or 'Auto Train' to see Loss Curve", pad + 20, h / 2);
         return;
       }
 
-      // Plot Loss line
-      ctx.strokeStyle = '#f43f5e';
-      ctx.lineWidth = 2.5;
+      ctx.strokeStyle = '#f43f5e'; ctx.lineWidth = 2.5;
       ctx.beginPath();
       for (let i = 0; i < lossHistory.length; i++) {
         const sx = pad + (i / Math.max(20, lossHistory.length - 1)) * (w - pad * 2);
         const clampedLoss = Math.min(0.5, lossHistory[i]);
         const sy = (h - pad) - (clampedLoss / 0.5) * (h - pad * 2);
-        if (i === 0) ctx.moveTo(sx, sy);
-        else ctx.lineTo(sx, sy);
+        if (i === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
       }
       ctx.stroke();
     }
@@ -1434,9 +1972,7 @@
         autoTrainInterval = setInterval(() => {
           stepOnce();
           const { loss } = updateLiveValues();
-          if (loss < 0.0001 || epoch > 150) {
-            toggleAutoTrain();
-          }
+          if (loss < 0.0001 || epoch > 150) toggleAutoTrain();
         }, 80);
       }
     }
@@ -1456,34 +1992,26 @@
     sbYSlider.addEventListener('input', () => { updateLiveValues(); drawLossPlot(); });
     sbLrSlider.addEventListener('input', () => { updateLiveValues(); });
 
-    // Window resize handler
     window.addEventListener('resize', () => {
       drawDifferentiation();
       drawIntegration();
+      drawExpandingSquare();
+      drawExpandingRectangle();
+      drawExponential();
+      drawShiftCanvas();
+      drawIBPCanvas();
       drawLossPlot();
-    });
-
-    // Nav active link on scroll
-    const sections = document.querySelectorAll('section');
-    const navLinks = document.querySelectorAll('.nav-links a');
-    window.addEventListener('scroll', () => {
-      let current = '';
-      sections.forEach(sec => {
-        const top = sec.offsetTop;
-        if (pageYOffset >= top - 150) current = sec.getAttribute('id');
-      });
-      navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === `#${current}`) {
-          link.classList.add('active');
-        }
-      });
     });
 
     // Initial render
     setTimeout(() => {
       drawDifferentiation();
       drawIntegration();
+      drawExpandingSquare();
+      drawExpandingRectangle();
+      drawExponential();
+      drawShiftCanvas();
+      drawIBPCanvas();
       updateLiveValues();
       drawLossPlot();
     }, 150);
