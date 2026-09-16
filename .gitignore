@@ -1,0 +1,11 @@
+# Environment and temporary files
+.env
+*.log
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
+
+# Local IDE folders
+.vscode/
+.idea/

@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intuitive Calculus & Backpropagation Deep Dive</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --surface: #111827;
+      --surface-card: #1f2937;
+      --surface-card-hover: #283548;
+      --border: #374151;
+      --text: #f9fafb;
+      --text-muted: #9ca3af;
+      --primary: #38bdf8;
+      --primary-glow: rgba(56, 189, 248, 0.25);
+      --emerald: #10b981;
+      --emerald-glow: rgba(16, 185, 129, 0.25);
+      --rose: #f43f5e;
+      --rose-glow: rgba(244, 63, 94, 0.25);
+      --amber: #f59e0b;
+      --purple: #a855f7;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar Navigation */
+    aside {
+      width: 280px;
+      background-color: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 1.5rem 1rem;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--primary), var(--purple));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+    .brand-text h1 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+    .brand-text p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .nav-group-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      padding-left: 0.5rem;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .nav-links a {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.6rem 0.75rem;
+      border-radius: 8px;
+      color: #d1d5db;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.15s ease;
+    }
+
+    .nav-links a:hover {
+      background-color: var(--surface-card);
+      color: #fff;
+    }
+
+    .nav-links a.active {
+      background-color: var(--primary);
+      color: #0b0f19;
+      font-weight: 600;
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    /* Main Content Area */
+    main {
+      flex: 1;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem 5rem 2rem;
+      overflow-y: auto;
+    }
+
+    section {
+      margin-bottom: 4.5rem;
+      scroll-margin-top: 2rem;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      color: var(--primary);
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #fff;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #f3f4f6;
+      margin: 1.75rem 0 0.75rem 0;
+    }
+
+    p {
+      color: #d1d5db;
+      font-size: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    strong {
+      color: #fff;
+    }
+
+    /* Cards */
+    .card {
+      background-color: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Metaphor Box */
+    .metaphor-box {
+      background: linear-gradient(145deg, rgba(31, 41, 55, 0.8), rgba(17, 24, 39, 0.95));
+      border-left: 4px solid var(--primary);
+      border-radius: 0 12px 12px 0;
+      padding: 1.25rem 1.5rem;
+      margin: 1.25rem 0;
+    }
+    .metaphor-box.emerald {
+      border-left-color: var(--emerald);
+    }
+    .metaphor-box.rose {
+      border-left-color: var(--rose);
+    }
+    .metaphor-box.amber {
+      border-left-color: var(--amber);
+    }
+
+    .metaphor-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.4rem;
+    }
+    .metaphor-box.emerald .metaphor-title { color: var(--emerald); }
+    .metaphor-box.rose .metaphor-title { color: var(--rose); }
+    .metaphor-box.amber .metaphor-title { color: var(--amber); }
+
+    /* Interactive Canvas & Grid Containers */
+    .interactive-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 1.5rem;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .interactive-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .canvas-container {
+      background-color: #030712;
+      border: 1px solid #1f2937;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 340px;
+    }
+
+    /* Controls Panel */
+    .controls-panel {
+      background-color: #111827;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .control-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #9ca3af;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .control-val {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      background: #374151;
+      border-radius: 3px;
+      outline: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      box-shadow: 0 0 10px var(--primary-glow);
+      transition: transform 0.1s;
+    }
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+
+    /* Math Formula Block */
+    .math-card {
+      background-color: #0b0f19;
+      border: 1px solid #1f2937;
+      border-radius: 10px;
+      padding: 1rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .math-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.2rem 0;
+    }
+    .math-row + .math-row {
+      border-top: 1px solid #1f2937;
+      padding-top: 0.4rem;
+    }
+    .math-val {
+      font-weight: 700;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-primary {
+      background-color: var(--primary);
+      color: #0b0f19;
+    }
+    .btn-primary:hover {
+      filter: brightness(1.1);
+      box-shadow: 0 4px 15px var(--primary-glow);
+    }
+    .btn-emerald {
+      background-color: var(--emerald);
+      color: #fff;
+    }
+    .btn-emerald:hover {
+      filter: brightness(1.1);
+      box-shadow: 0 4px 15px var(--emerald-glow);
+    }
+    .btn-secondary {
+      background-color: #374151;
+      color: #e5e7eb;
+    }
+    .btn-secondary:hover {
+      background-color: #4b5563;
+    }
+
+    /* Neural Network Node Visual */
+    .network-dag {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.5rem 1rem;
+      background: #030712;
+      border-radius: 12px;
+      border: 1px solid #1f2937;
+      overflow-x: auto;
+    }
+    .dag-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 1rem;
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      min-width: 120px;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+    .dag-node.active-forward {
+      border-color: var(--primary);
+      box-shadow: 0 0 15px var(--primary-glow);
+    }
+    .dag-node.active-backward {
+      border-color: var(--rose);
+      box-shadow: 0 0 15px var(--rose-glow);
+    }
+    .dag-node-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+    .dag-node-val {
+      font-size: 1.4rem;
+      font-weight: 800;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      color: #fff;
+    }
+    .dag-node-grad {
+      font-size: 0.75rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      color: var(--rose);
+      background: rgba(244, 63, 94, 0.1);
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      border: 1px solid rgba(244, 63, 94, 0.25);
+      margin-top: 0.5rem;
+    }
+    .dag-arrow {
+      font-size: 1.5rem;
+      color: var(--text-muted);
+      font-weight: bold;
+    }
+
+    /* Comparison Table */
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    .comparison-table th, .comparison-table td {
+      padding: 0.85rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .comparison-table th {
+      background-color: var(--surface);
+      color: #fff;
+      font-weight: 700;
+    }
+    .comparison-table tr:hover {
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Pill Badges */
+    .pill {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: ui-monospace, monospace;
+    }
+    .pill-blue { background: rgba(56, 189, 248, 0.15); color: var(--primary); border: 1px solid rgba(56, 189, 248, 0.3); }
+    .pill-green { background: rgba(16, 185, 129, 0.15); color: var(--emerald); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .pill-red { background: rgba(244, 63, 94, 0.15); color: var(--rose); border: 1px solid rgba(244, 63, 94, 0.3); }
+    .pill-amber { background: rgba(245, 158, 11, 0.15); color: var(--amber); border: 1px solid rgba(245, 158, 11, 0.3); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body { flex-direction: column; }
+      aside {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+      main { padding: 1.5rem 1rem; }
+      .network-dag { flex-direction: column; gap: 0.5rem; }
+      .dag-arrow { transform: rotate(90deg); margin: 0.25rem 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR NAVIGATION -->
+  <aside>
+    <div class="brand">
+      <div class="brand-icon">🧠</div>
+      <div class="brand-text">
+        <h1>Learn AI Core</h1>
+        <p>Calculus & Backprop</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="nav-group-title">The Foundations</div>
+      <ul class="nav-links">
+        <li><a href="#intro" class="active"><span>💡</span> The Core Intuition</a></li>
+        <li><a href="#differentiation"><span>📈</span> 1. Differentiation</a></li>
+        <li><a href="#integration"><span>📊</span> 2. Integration</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="nav-group-title">The Neural Net Engine</div>
+      <ul class="nav-links">
+        <li><a href="#chain-rule"><span>⚙️</span> 3. The Chain Rule</a></li>
+        <li><a href="#backpropagation"><span>🧠</span> 4. Backpropagation</a></li>
+        <li><a href="#live-playground"><span>🎮</span> 5. Live Trainer Sandbox</a></li>
+        <li><a href="#summary"><span>⚡</span> 6. Summary & Cheatsheet</a></li>
+      </ul>
+    </div>
+
+    <div style="margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--text-muted);">
+      Interactive educational lab
+    </div>
+  </aside>
+
+  <!-- MAIN ARTICLE & INTERACTIVE SIMULATORS -->
+  <main>
+
+    <!-- SECTION: INTRO -->
+    <section id="intro">
+      <div class="hero-badge">From Zero to Crystal Clear</div>
+      <h2>Calculus & Neural Net Backpropagation</h2>
+      <p style="font-size: 1.15rem; color: #e5e7eb;">
+        Many people are intimidated by the scary symbols in calculus: <em>dy/dx</em>, <em>&int;</em>, <em>&part;</em>, and <em>&nabla;</em>.
+        In reality, these are just formal names for <strong>two simple actions</strong> you do naturally every single day:
+        <strong>measuring a speedometer reading</strong> and <strong>filling up a container</strong>.
+      </p>
+
+      <div class="metaphor-box">
+        <div class="metaphor-title">🚗 The Road Trip Analogy (The Whole Secret in 3 Seconds)</div>
+        <table class="comparison-table" style="margin: 0.5rem 0;">
+          <thead>
+            <tr>
+              <th>Concept</th>
+              <th>The Question You Ask</th>
+              <th>Car Dashboard</th>
+              <th>Calculus Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="pill pill-blue">Rate of Change</span></td>
+              <td><em>"Right at this millisecond, how fast am I moving?"</em></td>
+              <td><strong>Speedometer</strong></td>
+              <td><strong>Differentiation</strong> (dy/dx)</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-green">Accumulation</span></td>
+              <td><em>"If I know my speed at every second, how far did I travel?"</em></td>
+              <td><strong>Odometer</strong></td>
+              <td><strong>Integration</strong> (&int; f(t) dt)</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-red">Error Blame</span></td>
+              <td><em>"I arrived 5 mins late. Which pedal knob caused the delay?"</em></td>
+              <td><strong>Cruise Control</strong></td>
+              <td><strong>Backpropagation</strong> (&part;L/&part;w)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 1: DIFFERENTIATION -->
+    <section id="differentiation">
+      <div class="hero-badge" style="color: var(--primary); background: rgba(56,189,248,0.1);">Step 1 of 4</div>
+      <h2>📈 What is Differentiation? (The "Nudge" Test)</h2>
+      <p>
+        Imagine you have a machine with an input knob <strong>x</strong> and a dial <strong>y = f(x)</strong>.
+        Differentiation answers only one question:
+      </p>
+      <div style="background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.2); padding: 1rem 1.25rem; border-radius: 10px; margin-bottom: 1.5rem;">
+        <strong style="color: var(--primary); font-size: 1.05rem;">The Golden Rule of Differentiation:</strong>
+        <p style="margin: 0.25rem 0 0 0; color: #e0f2fe;">
+          <em>"If I nudge the knob x forward by a tiny fraction &Delta;x, by how much does the dial y react (&Delta;y)?"</em>
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span>Interactive Lab 1: Shrinking the Nudge (&Delta;x &rarr; 0)</span>
+          <span class="pill pill-blue">Function: f(x) = x²</span>
+        </div>
+
+        <div class="interactive-grid">
+          <!-- Canvas Plot -->
+          <div class="canvas-container">
+            <canvas id="diffCanvas"></canvas>
+          </div>
+
+          <!-- Controls & Math Readout -->
+          <div class="controls-panel">
+            <div class="control-group">
+              <div class="control-label">
+                <span>Input Knob Position (x)</span>
+                <span id="diff-x-disp" class="control-val">1.50</span>
+              </div>
+              <input type="range" id="diff-x-slider" min="0.5" max="2.8" step="0.05" value="1.50">
+            </div>
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>Nudge Size (&Delta;x)</span>
+                <span id="diff-dx-disp" class="control-val" style="color: var(--rose);">1.00</span>
+              </div>
+              <input type="range" id="diff-dx-slider" min="0.01" max="2.0" step="0.01" value="1.00">
+              <div style="display:flex; justify-content:space-between; font-size:0.7rem; color:var(--text-muted);">
+                <span>0.01 (Instantaneous)</span>
+                <span>2.00 (Coarse)</span>
+              </div>
+            </div>
+
+            <div class="math-card">
+              <div class="math-row">
+                <span style="color:var(--text-muted);">Step &Delta;x:</span>
+                <span id="m-dx" class="math-val" style="color: var(--amber);">1.00</span>
+              </div>
+              <div class="math-row">
+                <span style="color:var(--text-muted);">Reaction &Delta;y:</span>
+                <span id="m-dy" class="math-val" style="color: var(--rose);">4.00</span>
+              </div>
+              <div class="math-row">
+                <span style="color:var(--text-muted);">Secant Slope (&Delta;y / &Delta;x):</span>
+                <span id="m-secant" class="math-val" style="color: var(--rose);">4.00</span>
+              </div>
+              <div class="math-row" style="border-top: 1px solid #374151; padding-top: 0.5rem;">
+                <span style="color:var(--primary); font-weight:700;">Exact Derivative (2x):</span>
+                <span id="m-exact" class="math-val" style="color: var(--emerald); font-size:1rem;">3.00</span>
+              </div>
+            </div>
+
+            <div style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.4;">
+              👉 <strong>Notice:</strong> Drag the <span style="color:var(--rose)">Nudge Size</span> slider towards <strong>0.01</strong>.
+              The pink secant line snaps seamlessly onto the green tangent line! That is the limit definition of a derivative:
+              <br><code style="color:var(--primary)">dy/dx = lim(&Delta;x&rarr;0) [f(x+&Delta;x) - f(x)] / &Delta;x</code>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Why is this vital for Neural Networks?</h3>
+      <p>
+        In deep learning, every neuron has a weight knob <em>w</em>. We test:
+        <em>"If I turn knob w up by 0.001, does my prediction error jump up or drop down?"</em>
+        The derivative &part;Error/&part;w gives us the exact answer!
+      </p>
+    </section>
+
+    <!-- SECTION 2: INTEGRATION -->
+    <section id="integration">
+      <div class="hero-badge" style="color: var(--emerald); background: rgba(16,185,129,0.1);">Step 2 of 4</div>
+      <h2>📊 What is Integration? (The "Accumulation" Machine)</h2>
+      <p>
+        If differentiation is slicing a loaf of bread into paper-thin slices, <strong>integration is gluing those slices back together to rebuild the loaf</strong>.
+      </p>
+
+      <div class="metaphor-box emerald">
+        <div class="metaphor-title">🚰 Intuition: The Leaky Faucet</div>
+        <p style="margin: 0; color: #d1fae5; font-size: 0.95rem;">
+          If water drips at an uneven rate (say 3 ml/sec then 7 ml/sec then 1 ml/sec),
+          how much water is in the bucket after 10 seconds?
+          You can't just multiply rate &times; time once because the rate was changing constantly!
+          Instead, you multiply the rate in each tiny slice of time and <strong>sum them up</strong>. That summation is an <strong>integral</strong>.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span>Interactive Lab 2: Slicing into Riemann Rectangles</span>
+          <span class="pill pill-green">Area under f(x) = x² from 0 to b</span>
+        </div>
+
+        <div class="interactive-grid">
+          <div class="canvas-container">
+            <canvas id="intCanvas"></canvas>
+          </div>
+
+          <div class="controls-panel">
+            <div class="control-group">
+              <div class="control-label">
+                <span>Number of Slices (N)</span>
+                <span id="int-n-disp" class="control-val" style="color: var(--emerald);">4</span>
+              </div>
+              <input type="range" id="int-n-slider" min="2" max="60" step="1" value="4">
+              <div style="display:flex; justify-content:space-between; font-size:0.7rem; color:var(--text-muted);">
+                <span>2 (Rough blocks)</span>
+                <span>60 (Smooth curve)</span>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>Upper Bound (b)</span>
+                <span id="int-b-disp" class="control-val">2.0</span>
+              </div>
+              <input type="range" id="int-b-slider" min="1.0" max="3.0" step="0.1" value="2.0">
+            </div>
+
+            <div class="math-card">
+              <div class="math-row">
+                <span style="color:var(--text-muted);">Width of each slice (dx):</span>
+                <span id="m-int-dx" class="math-val" style="color: var(--primary);">0.500</span>
+              </div>
+              <div class="math-row">
+                <span style="color:var(--text-muted);">Riemann Sum (&Sigma; f&middot;dx):</span>
+                <span id="m-int-sum" class="math-val" style="color: var(--emerald); font-size:1rem;">3.750</span>
+              </div>
+              <div class="math-row">
+                <span style="color:var(--text-muted);">Exact Formula (b³/3):</span>
+                <span id="m-int-exact" class="math-val" style="color: var(--amber);">2.667</span>
+              </div>
+              <div class="math-row" style="border-top: 1px solid #374151; padding-top: 0.5rem;">
+                <span style="color:var(--rose);">Error vs Exact:</span>
+                <span id="m-int-err" class="math-val" style="color: var(--rose);">+40.6%</span>
+              </div>
+            </div>
+
+            <div style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.4;">
+              👉 <strong>Watch:</strong> As you increase the number of slices N to 50+, the rectangular error blocks vanish, and the sum locks onto the exact integral!
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="metaphor-box amber">
+        <div class="metaphor-title">🔄 The Fundamental Theorem of Calculus</div>
+        <p style="margin: 0; color: #fef3c7; font-size: 0.95rem;">
+          Differentiation takes a curve and measures its instantaneous slope. Integration takes the slopes and measures the total accumulated curve.
+          They are exact inverse operations of each other:
+          <br><br>
+          <strong style="color: #fff; font-family: monospace;">&int; (df/dx) dx = f(x)</strong>
+        </p>
+      </div>
+    </section>
+
+    <!-- SECTION 3: THE CHAIN RULE -->
+    <section id="chain-rule">
+      <div class="hero-badge" style="color: var(--amber); background: rgba(245,158,11,0.1);">Step 3 of 4</div>
+      <h2>⚙️ The Chain Rule: Connecting the Gears</h2>
+      <p>
+        Neural networks are not single functions; they are <strong>chains of functions nested inside each other</strong>:
+      </p>
+      <p style="text-align: center; font-family: monospace; font-size: 1.1rem; color: var(--primary);">
+        Input (x) &rarr; Linear sum (z) &rarr; Activation (a) &rarr; Prediction (&ycirc;) &rarr; Loss (L)
+      </p>
+      <p>
+        How do we find the effect of the first input knob <em>w</em> on the final Loss <em>L</em>?
+        We use the <strong>Chain Rule</strong>.
+      </p>
+
+      <div class="metaphor-box rose">
+        <div class="metaphor-title">🚲 The Bicycle Gear Ratio Intuition</div>
+        <p style="color: #ffe4e6; font-size: 0.95rem; margin-bottom: 0.5rem;">
+          Suppose you pedal gear <strong>A</strong>.
+        </p>
+        <ul style="margin-left: 1.5rem; color: #ffe4e6; font-size: 0.9rem; line-height: 1.8;">
+          <li>Turning Gear A by 1&deg; spins intermediate Gear B by 3&deg; (dB/dA = 3).</li>
+          <li>Turning Gear B by 1&deg; spins the back wheel C by 4&deg; (dC/dB = 4).</li>
+          <li><strong>How much does turning Gear A spin the back wheel C?</strong></li>
+        </ul>
+        <div style="background: rgba(0,0,0,0.4); padding: 0.75rem; border-radius: 8px; font-family: monospace; color: #fff; text-align: center; margin-top: 0.75rem;">
+          dC/dA = (dC/dB) &times; (dB/dA) = 4 &times; 3 = <strong>12</strong>
+        </div>
+      </div>
+
+      <p>
+        <strong>That's the entire Chain Rule!</strong> To find the derivative across a chain of nodes, you simply <strong>multiply all the local derivatives between them</strong>.
+      </p>
+    </section>
+
+    <!-- SECTION 4: BACKPROPAGATION -->
+    <section id="backpropagation">
+      <div class="hero-badge" style="color: var(--rose); background: rgba(244,63,94,0.1);">Step 4 of 4</div>
+      <h2>🧠 Backpropagation: The Complete Math with Real Numbers</h2>
+      <p>
+        Now let's demystify backpropagation completely. We will calculate every single number by hand for a real neuron, forward and backward.
+      </p>
+
+      <!-- Interactive DAG Visualization -->
+      <div class="card">
+        <div class="card-title">
+          <span>The Forward & Backward Flow in a Single Neuron</span>
+          <span class="pill pill-red">Target y = 1.0</span>
+        </div>
+
+        <div class="network-dag">
+          <!-- Node 1: Weight & Input -->
+          <div class="dag-node">
+            <div class="dag-node-title">Input (x)</div>
+            <div class="dag-node-val" style="color: var(--primary);">2.0</div>
+            <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">Weight w = <span id="dag-w-text">0.50</span></div>
+            <div class="dag-node-grad">&part;z/&part;w = 2.0</div>
+          </div>
+
+          <div class="dag-arrow">&rarr;</div>
+
+          <!-- Node 2: Linear z -->
+          <div class="dag-node active-forward">
+            <div class="dag-node-title">Linear (z)</div>
+            <div class="dag-node-val" id="dag-z-val" style="color: var(--primary);">1.00</div>
+            <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">z = w&middot;x + b</div>
+            <div class="dag-node-grad">&part;a/&part;z = <span id="dag-dadz-text">0.197</span></div>
+          </div>
+
+          <div class="dag-arrow">&rarr;</div>
+
+          <!-- Node 3: Activation a -->
+          <div class="dag-node">
+            <div class="dag-node-title">Activation (a)</div>
+            <div class="dag-node-val" id="dag-a-val" style="color: var(--amber);">0.731</div>
+            <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">&sigma;(z) = 1/(1+e⁻ᶻ)</div>
+            <div class="dag-node-grad">&part;L/&part;a = <span id="dag-dlda-text">-0.269</span></div>
+          </div>
+
+          <div class="dag-arrow">&rarr;</div>
+
+          <!-- Node 4: Loss L -->
+          <div class="dag-node active-backward">
+            <div class="dag-node-title">Loss (L)</div>
+            <div class="dag-node-val" id="dag-loss-val" style="color: var(--rose);">0.036</div>
+            <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">½ (a - y)²</div>
+            <div class="dag-node-grad" style="background: rgba(56,189,248,0.1); color: var(--primary); border-color: rgba(56,189,248,0.3);">
+              &part;L/&part;w = <span id="dag-total-grad">-0.106</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Step-by-Step Arithmetic Walkthrough:</h3>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+        <!-- Forward Pass Card -->
+        <div class="card" style="margin:0; border-top: 3px solid var(--primary);">
+          <h4 style="color: var(--primary); margin-bottom: 0.75rem;">
+            ▶ 1. Forward Pass (Prediction)
+          </h4>
+          <ol style="margin-left: 1.25rem; font-size: 0.88rem; color: #d1d5db; display: flex; flex-direction: column; gap: 0.75rem;">
+            <li>
+              <strong>Weighted Sum (z):</strong>
+              <br><code style="color:var(--primary)">z = w&middot;x + b = (0.5 &times; 2.0) + 0 = 1.0</code>
+            </li>
+            <li>
+              <strong>Sigmoid Activation (a):</strong>
+              <br><code style="color:var(--amber)">a = 1 / (1 + e⁻¹˙⁰) = 0.731</code>
+            </li>
+            <li>
+              <strong>Error / Loss (L):</strong>
+              <br>Desired output is y = 1.0.
+              <br><code style="color:var(--rose)">L = ½ (0.731 - 1.0)² = 0.0362</code>
+            </li>
+          </ol>
+        </div>
+
+        <!-- Backward Pass Card -->
+        <div class="card" style="margin:0; border-top: 3px solid var(--rose);">
+          <h4 style="color: var(--rose); margin-bottom: 0.75rem;">
+            ◀ 2. Backward Pass (Backprop)
+          </h4>
+          <ol style="margin-left: 1.25rem; font-size: 0.88rem; color: #d1d5db; display: flex; flex-direction: column; gap: 0.75rem;">
+            <li>
+              <strong>Loss Gradient (&part;L / &part;a):</strong>
+              <br><code style="color:var(--rose)">&part;L/&part;a = (a - y) = 0.731 - 1.0 = -0.269</code>
+            </li>
+            <li>
+              <strong>Activation Gradient (&part;a / &part;z):</strong>
+              <br><code style="color:var(--amber)">&part;a/&part;z = a(1 - a) = 0.731 &times; 0.269 = 0.1966</code>
+            </li>
+            <li>
+              <strong>Weight Gradient (&part;z / &part;w):</strong>
+              <br><code style="color:var(--primary)">&part;z/&part;w = x = 2.0</code>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- Final Chain Multiply -->
+      <div class="card" style="background: rgba(15, 23, 42, 0.9); border: 1px solid var(--primary);">
+        <div style="font-weight: 700; color: #fff; margin-bottom: 0.5rem;">
+          🎯 The Grand Chain Multiplication:
+        </div>
+        <p style="font-family: monospace; font-size: 1rem; color: #e0f2fe; margin-bottom: 0.5rem;">
+          &part;L/&part;w = (&part;L/&part;a) &times; (&part;a/&part;z) &times; (&part;z/&part;w)
+        </p>
+        <p style="font-family: monospace; font-size: 1.05rem; color: var(--emerald); margin-bottom: 0.75rem;">
+          &part;L/&part;w = (-0.269) &times; (0.1966) &times; (2.0) = <strong>-0.1058</strong>
+        </p>
+        <p style="font-size: 0.85rem; color: #9ca3af; margin: 0;">
+          💡 <strong>Physical Meaning:</strong> The gradient is negative (-0.1058). That proves that <strong>increasing w will decrease the error!</strong>
+        </p>
+      </div>
+
+      <!-- Update formula -->
+      <div class="card">
+        <h4 style="color: #fff; margin-bottom: 0.5rem;">3. Updating the Weight (Gradient Descent)</h4>
+        <p style="font-size: 0.9rem; color: #d1d5db;">
+          We take a step in the direction that lowers the loss, scaled by learning rate &eta; = 0.1:
+        </p>
+        <div style="background: #030712; padding: 0.85rem; border-radius: 8px; font-family: monospace; font-size: 0.95rem; color: #38bdf8;">
+          w_new = w_old - &eta; &middot; (&part;L/&part;w)<br>
+          w_new = 0.5 - (0.1) &middot; (-0.1058) = <strong>0.51058</strong>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--emerald); margin-top: 0.75rem; margin-bottom: 0;">
+          ✓ The weight increased from 0.5 &rarr; 0.51058. If you re-evaluate the error, it dropped from 0.0362 &rarr; 0.0349!
+        </p>
+      </div>
+    </section>
+
+    <!-- SECTION 5: LIVE PLAYGROUND -->
+    <section id="live-playground">
+      <div class="hero-badge" style="color: var(--primary); background: rgba(56,189,248,0.1);">Hands-On Sandbox</div>
+      <h2>🎮 Live Interactive Training Sandbox</h2>
+      <p>
+        Interact with the neuron below in real time. Adjust the target, click <strong>"Step 1 Gradient Update"</strong>, or press <strong>"Auto-Train"</strong> to watch the loss curve plunge to zero!
+      </p>
+
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+          <div>
+            <span class="pill pill-blue">Neuron Trainer</span>
+            <span style="font-size: 0.85rem; color: var(--text-muted); margin-left: 0.5rem;">Epoch: <span id="epoch-count" style="color:#fff; font-weight:bold;">0</span></span>
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button id="step-btn" onclick="stepOnce()" class="btn btn-primary">⚡ Step 1 Update</button>
+            <button id="play-btn" onclick="toggleAutoTrain()" class="btn btn-emerald">▶ Auto Train</button>
+            <button onclick="resetTraining()" class="btn btn-secondary">↺ Reset</button>
+          </div>
+        </div>
+
+        <div class="interactive-grid">
+          <!-- Realtime Loss History Canvas -->
+          <div class="canvas-container">
+            <canvas id="lossCanvas"></canvas>
+          </div>
+
+          <!-- Controls & Realtime Monitor -->
+          <div class="controls-panel">
+            <div class="control-group">
+              <div class="control-label">
+                <span>Weight (w)</span>
+                <span id="sb-w-disp" class="control-val">0.50</span>
+              </div>
+              <input type="range" id="sb-w-slider" min="-3.0" max="3.0" step="0.02" value="0.50">
+            </div>
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>Target Value (y)</span>
+                <span id="sb-y-disp" class="control-val" style="color:var(--emerald);">1.00</span>
+              </div>
+              <input type="range" id="sb-y-slider" min="0.0" max="1.0" step="0.05" value="1.00">
+            </div>
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>Learning Rate (&eta;)</span>
+                <span id="sb-lr-disp" class="control-val" style="color:var(--amber);">0.50</span>
+              </div>
+              <input type="range" id="sb-lr-slider" min="0.05" max="2.0" step="0.05" value="0.50">
+            </div>
+
+            <div class="math-card">
+              <div class="math-row">
+                <span style="color:var(--text-muted);">Current Output (a):</span>
+                <span id="sb-out-disp" class="math-val" style="color: var(--amber);">0.731</span>
+              </div>
+              <div class="math-row">
+                <span style="color:var(--text-muted);">Current Loss:</span>
+                <span id="sb-loss-disp" class="math-val" style="color: var(--rose); font-size: 1rem;">0.0362</span>
+              </div>
+              <div class="math-row">
+                <span style="color:var(--text-muted);">Gradient (&part;L/&part;w):</span>
+                <span id="sb-grad-disp" class="math-val" style="color: var(--primary);">-0.1058</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: SUMMARY & CHEATSHEET -->
+    <section id="summary">
+      <div class="hero-badge" style="color: var(--purple); background: rgba(168,85,247,0.1);">Knowledge Check</div>
+      <h2>⚡ Ultimate Mental Model & Cheatsheet</h2>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin-top: 1.5rem;">
+        
+        <div class="card" style="margin:0;">
+          <h3 style="color: var(--primary); font-size: 1.1rem; margin-top: 0;">1. Differentiation</h3>
+          <p style="font-size: 0.85rem; color: #d1d5db;">
+            <strong>What is it?</strong> The instantaneous slope / sensitivity.<br>
+            <strong>Intuition:</strong> "If I nudge knob X, how much does dial Y swing?"<br>
+            <strong>Role in AI:</strong> Tells which direction to adjust each parameter to drop error.
+          </p>
+        </div>
+
+        <div class="card" style="margin:0;">
+          <h3 style="color: var(--emerald); font-size: 1.1rem; margin-top: 0;">2. Integration</h3>
+          <p style="font-size: 0.85rem; color: #d1d5db;">
+            <strong>What is it?</strong> Total accumulation / area under curve.<br>
+            <strong>Intuition:</strong> "Adding up thousands of tiny slices into a grand total."<br>
+            <strong>Role in AI:</strong> Expected values, probability density, continuous loss over time.
+          </p>
+        </div>
+
+        <div class="card" style="margin:0;">
+          <h3 style="color: var(--rose); font-size: 1.1rem; margin-top: 0;">3. Backpropagation</h3>
+          <p style="font-size: 0.85rem; color: #d1d5db;">
+            <strong>What is it?</strong> The Chain Rule applied backwards efficiently.<br>
+            <strong>Intuition:</strong> Passing blame from the final error back to every early knob.<br>
+            <strong>Secret Advantage:</strong> Re-uses computed partial derivatives so training is O(N) instead of O(N²)!
+          </p>
+        </div>
+
+      </div>
+
+      <!-- FAQ Section -->
+      <div class="card" style="margin-top: 2rem;">
+        <h3 style="margin-top: 0; color: #fff;">💡 Frequently Asked "Ah-Ha!" Questions</h3>
+        
+        <div style="margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 1rem;">
+          <h4 style="color: var(--primary);">Q: Why not just test each weight numerically by adding 0.0001 and seeing the error?</h4>
+          <p style="font-size: 0.9rem; color: #9ca3af; margin-top: 0.25rem;">
+            A modern neural network (like GPT-4) has over 1,000,000,000,000 weights! If you ran a forward test for each weight individually, one single step would take hundreds of years.
+            <strong>Backpropagation computes the gradient for ALL billions of weights simultaneously in one single backward sweep!</strong>
+          </p>
+        </div>
+
+        <div style="margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 1rem;">
+          <h4 style="color: var(--emerald);">Q: What is a "partial derivative" (&part;) vs a normal derivative (d)?</h4>
+          <p style="font-size: 0.9rem; color: #9ca3af; margin-top: 0.25rem;">
+            A normal derivative df/dx is for when there is only 1 variable. A partial derivative &part;f/&part;w₁ is for when there are multiple knobs (w₁, w₂, b): you freeze all other knobs in place and nudge only w₁ to see its individual contribution.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- JAVASCRIPT SIMULATORS & INTERACTIVITY -->
+  <script>
+    // Utility for HiDPI Canvases
+    function setupCanvas(canvas) {
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      const ctx = canvas.getContext('2d');
+      ctx.resetTransform();
+      ctx.scale(dpr, dpr);
+      return { ctx, w: rect.width, h: rect.height };
+    }
+
+    // =========================================================================
+    // 1. DIFFERENTIATION INTERACTIVE CANVAS
+    // =========================================================================
+    const diffCanvas = document.getElementById('diffCanvas');
+    const diffXSlider = document.getElementById('diff-x-slider');
+    const diffDxSlider = document.getElementById('diff-dx-slider');
+
+    function f(x) { return x * x; }
+    function df(x) { return 2 * x; }
+
+    function drawDifferentiation() {
+      const { ctx, w, h } = setupCanvas(diffCanvas);
+      const xVal = parseFloat(diffXSlider.value);
+      const dxVal = parseFloat(diffDxSlider.value);
+
+      document.getElementById('diff-x-disp').innerText = xVal.toFixed(2);
+      document.getElementById('diff-dx-disp').innerText = dxVal.toFixed(2);
+
+      const y1 = f(xVal);
+      const y2 = f(xVal + dxVal);
+      const dy = y2 - y1;
+      const secantSlope = dy / dxVal;
+      const exactSlope = df(xVal);
+
+      document.getElementById('m-dx').innerText = dxVal.toFixed(2);
+      document.getElementById('m-dy').innerText = dy.toFixed(3);
+      document.getElementById('m-secant').innerText = secantSlope.toFixed(3);
+      document.getElementById('m-exact').innerText = exactSlope.toFixed(2);
+
+      ctx.clearRect(0, 0, w, h);
+
+      const pad = 40;
+      const minX = 0, maxX = 3.8;
+      const minY = 0, maxY = 13;
+
+      function toX(x) { return pad + ((x - minX) / (maxX - minX)) * (w - pad * 2); }
+      function toY(y) { return (h - pad) - ((y - minY) / (maxY - minY)) * (h - pad * 2); }
+
+      // Grid
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let x = 0; x <= 3.5; x += 1) {
+        ctx.moveTo(toX(x), toY(0));
+        ctx.lineTo(toX(x), toY(maxY));
+      }
+      for (let y = 0; y <= 12; y += 3) {
+        ctx.moveTo(toX(0), toY(y));
+        ctx.lineTo(toX(maxX), toY(y));
+      }
+      ctx.stroke();
+
+      // Axes
+      ctx.strokeStyle = '#475569';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(toX(0), toY(0));
+      ctx.lineTo(toX(maxX), toY(0));
+      ctx.moveTo(toX(0), toY(0));
+      ctx.lineTo(toX(0), toY(maxY));
+      ctx.stroke();
+
+      // Curve
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      for (let px = 0; px <= maxX; px += 0.05) {
+        const sx = toX(px);
+        const sy = toY(f(px));
+        if (px === 0) ctx.moveTo(sx, sy);
+        else ctx.lineTo(sx, sy);
+      }
+      ctx.stroke();
+
+      // Tangent Line
+      ctx.strokeStyle = '#10b981';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      const tanRange = 1.3;
+      ctx.moveTo(toX(Math.max(0, xVal - tanRange)), toY(y1 - exactSlope * Math.min(xVal, tanRange)));
+      ctx.lineTo(toX(Math.min(maxX, xVal + tanRange)), toY(y1 + exactSlope * (Math.min(maxX, xVal + tanRange) - xVal)));
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Secant slope triangle
+      const p1x = toX(xVal), p1y = toY(y1);
+      const p2x = toX(xVal + dxVal), p2y = toY(y2);
+      const cornerX = toX(xVal + dxVal), cornerY = toY(y1);
+
+      ctx.fillStyle = 'rgba(244, 63, 94, 0.15)';
+      ctx.beginPath();
+      ctx.moveTo(p1x, p1y);
+      ctx.lineTo(cornerX, cornerY);
+      ctx.lineTo(p2x, p2y);
+      ctx.closePath();
+      ctx.fill();
+
+      // Secant Line
+      ctx.strokeStyle = '#f43f5e';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(p1x, p1y);
+      ctx.lineTo(p2x, p2y);
+      ctx.stroke();
+
+      // Delta X
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(p1x, p1y);
+      ctx.lineTo(cornerX, cornerY);
+      ctx.stroke();
+
+      // Delta Y
+      ctx.strokeStyle = '#f43f5e';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(cornerX, cornerY);
+      ctx.lineTo(p2x, p2y);
+      ctx.stroke();
+
+      // Points
+      ctx.fillStyle = '#38bdf8';
+      ctx.beginPath();
+      ctx.arc(p1x, p1y, 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#f43f5e';
+      ctx.beginPath();
+      ctx.arc(p2x, p2y, 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Text Labels
+      ctx.fillStyle = '#f9fafb';
+      ctx.font = '11px monospace';
+      ctx.fillText(`(x, f(x))`, p1x - 35, p1y - 12);
+      ctx.fillText(`(x+Δx, f(x+Δx))`, p2x - 45, p2y - 12);
+      ctx.fillStyle = '#f59e0b';
+      ctx.fillText(`Δx = ${dxVal.toFixed(2)}`, (p1x + cornerX) / 2 - 25, cornerY + 16);
+      ctx.fillStyle = '#f43f5e';
+      ctx.fillText(`Δy = ${dy.toFixed(2)}`, cornerX + 8, (cornerY + p2y) / 2);
+    }
+
+    diffXSlider.addEventListener('input', drawDifferentiation);
+    diffDxSlider.addEventListener('input', drawDifferentiation);
+
+    // =========================================================================
+    // 2. INTEGRATION INTERACTIVE CANVAS
+    // =========================================================================
+    const intCanvas = document.getElementById('intCanvas');
+    const intNSlider = document.getElementById('int-n-slider');
+    const intBSlider = document.getElementById('int-b-slider');
+
+    function drawIntegration() {
+      const { ctx, w, h } = setupCanvas(intCanvas);
+      const N = parseInt(intNSlider.value);
+      const b = parseFloat(intBSlider.value);
+      const a = 0;
+
+      document.getElementById('int-n-disp').innerText = N;
+      document.getElementById('int-b-disp').innerText = b.toFixed(1);
+
+      const dx = (b - a) / N;
+      let riemannSum = 0;
+      for (let i = 0; i < N; i++) {
+        const x_right = a + (i + 1) * dx;
+        riemannSum += f(x_right) * dx;
+      }
+      const exactInt = (Math.pow(b, 3) - Math.pow(a, 3)) / 3;
+      const errorPct = ((riemannSum - exactInt) / exactInt) * 100;
+
+      document.getElementById('m-int-dx').innerText = dx.toFixed(3);
+      document.getElementById('m-int-sum').innerText = riemannSum.toFixed(3);
+      document.getElementById('m-int-exact').innerText = exactInt.toFixed(3);
+      document.getElementById('m-int-err').innerText = (errorPct >= 0 ? '+' : '') + errorPct.toFixed(1) + '%';
+
+      ctx.clearRect(0, 0, w, h);
+
+      const pad = 40;
+      const minX = 0, maxX = 3.5;
+      const minY = 0, maxY = 10;
+
+      function toX(x) { return pad + ((x - minX) / (maxX - minX)) * (w - pad * 2); }
+      function toY(y) { return (h - pad) - ((y - minY) / (maxY - minY)) * (h - pad * 2); }
+
+      // Draw Riemann Rectangles
+      for (let i = 0; i < N; i++) {
+        const x_left = a + i * dx;
+        const x_right = a + (i + 1) * dx;
+        const heightVal = f(x_right);
+
+        const rx = toX(x_left);
+        const rw = toX(x_right) - rx;
+        const ry = toY(heightVal);
+        const rh = toY(0) - ry;
+
+        ctx.fillStyle = 'rgba(16, 185, 129, 0.25)';
+        ctx.fillRect(rx, ry, rw, rh);
+        ctx.strokeStyle = 'rgba(16, 185, 129, 0.8)';
+        ctx.lineWidth = 1.2;
+        ctx.strokeRect(rx, ry, rw, rh);
+      }
+
+      // Curve
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      for (let px = 0; px <= maxX; px += 0.05) {
+        const sx = toX(px);
+        const sy = toY(f(px));
+        if (px === 0) ctx.moveTo(sx, sy);
+        else ctx.lineTo(sx, sy);
+      }
+      ctx.stroke();
+
+      // Axes
+      ctx.strokeStyle = '#475569';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(toX(0), toY(0));
+      ctx.lineTo(toX(maxX), toY(0));
+      ctx.moveTo(toX(0), toY(0));
+      ctx.lineTo(toX(0), toY(maxY));
+      ctx.stroke();
+
+      // Bound line at x = b
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(toX(b), toY(0));
+      ctx.lineTo(toX(b), toY(f(b)));
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#f59e0b';
+      ctx.font = '11px monospace';
+      ctx.fillText(`b = ${b.toFixed(1)}`, toX(b) - 15, toY(0) + 16);
+    }
+
+    intNSlider.addEventListener('input', drawIntegration);
+    intBSlider.addEventListener('input', drawIntegration);
+
+    // =========================================================================
+    // 3. LIVE SANDBOX & REALTIME LOSS PLOT
+    // =========================================================================
+    const lossCanvas = document.getElementById('lossCanvas');
+    const sbWSlider = document.getElementById('sb-w-slider');
+    const sbYSlider = document.getElementById('sb-y-slider');
+    const sbLrSlider = document.getElementById('sb-lr-slider');
+
+    let lossHistory = [];
+    let epoch = 0;
+    let autoTrainInterval = null;
+    const inputFixedX = 2.0;
+
+    function sigmoid(z) { return 1 / (1 + Math.exp(-z)); }
+
+    function updateLiveValues() {
+      const w = parseFloat(sbWSlider.value);
+      const y = parseFloat(sbYSlider.value);
+      const lr = parseFloat(sbLrSlider.value);
+
+      document.getElementById('sb-w-disp').innerText = w.toFixed(2);
+      document.getElementById('sb-y-disp').innerText = y.toFixed(2);
+      document.getElementById('sb-lr-disp').innerText = lr.toFixed(2);
+
+      // Forward Pass
+      const z = w * inputFixedX;
+      const a = sigmoid(z);
+      const loss = 0.5 * Math.pow(a - y, 2);
+
+      // Backward Pass
+      const dL_da = (a - y);
+      const da_dz = a * (1 - a);
+      const dz_dw = inputFixedX;
+      const dL_dw = dL_da * da_dz * dz_dw;
+
+      document.getElementById('sb-out-disp').innerText = a.toFixed(3);
+      document.getElementById('sb-loss-disp').innerText = loss.toFixed(4);
+      document.getElementById('sb-grad-disp').innerText = (dL_dw >= 0 ? '+' : '') + dL_dw.toFixed(4);
+
+      // Also update DAG section numbers
+      document.getElementById('dag-w-text').innerText = w.toFixed(2);
+      document.getElementById('dag-z-val').innerText = z.toFixed(2);
+      document.getElementById('dag-a-val').innerText = a.toFixed(3);
+      document.getElementById('dag-loss-val').innerText = loss.toFixed(3);
+      document.getElementById('dag-dadz-text').innerText = da_dz.toFixed(3);
+      document.getElementById('dag-dlda-text').innerText = (dL_da >= 0 ? '+' : '') + dL_da.toFixed(3);
+      document.getElementById('dag-total-grad').innerText = (dL_dw >= 0 ? '+' : '') + dL_dw.toFixed(3);
+
+      return { w, y, lr, z, a, loss, dL_dw };
+    }
+
+    function drawLossPlot() {
+      const { ctx, w, h } = setupCanvas(lossCanvas);
+      ctx.clearRect(0, 0, w, h);
+
+      const pad = 40;
+      // Grid
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let y = 0; y <= 0.5; y += 0.1) {
+        const sy = (h - pad) - (y / 0.5) * (h - pad * 2);
+        ctx.moveTo(pad, sy);
+        ctx.lineTo(w - pad, sy);
+      }
+      ctx.stroke();
+
+      // Axes
+      ctx.strokeStyle = '#475569';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(pad, pad);
+      ctx.lineTo(pad, h - pad);
+      ctx.lineTo(w - pad, h - pad);
+      ctx.stroke();
+
+      ctx.fillStyle = '#9ca3af';
+      ctx.font = '10px monospace';
+      ctx.fillText("Loss", pad - 10, pad - 10);
+      ctx.fillText("Epochs ➔", w - pad - 40, h - pad + 20);
+
+      if (lossHistory.length < 2) {
+        ctx.fillStyle = '#64748b';
+        ctx.font = '12px sans-serif';
+        ctx.fillText("Click 'Step 1 Update' or 'Auto Train' to see Loss Curve", pad + 20, h / 2);
+        return;
+      }
+
+      // Plot Loss line
+      ctx.strokeStyle = '#f43f5e';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      for (let i = 0; i < lossHistory.length; i++) {
+        const sx = pad + (i / Math.max(20, lossHistory.length - 1)) * (w - pad * 2);
+        const clampedLoss = Math.min(0.5, lossHistory[i]);
+        const sy = (h - pad) - (clampedLoss / 0.5) * (h - pad * 2);
+        if (i === 0) ctx.moveTo(sx, sy);
+        else ctx.lineTo(sx, sy);
+      }
+      ctx.stroke();
+    }
+
+    function stepOnce() {
+      const { w, lr, dL_dw, loss } = updateLiveValues();
+      lossHistory.push(loss);
+      epoch++;
+      document.getElementById('epoch-count').innerText = epoch;
+
+      const newW = w - lr * dL_dw;
+      sbWSlider.value = Math.max(-3.0, Math.min(3.0, newW)).toFixed(2);
+      updateLiveValues();
+      drawLossPlot();
+    }
+
+    function toggleAutoTrain() {
+      const btn = document.getElementById('play-btn');
+      if (autoTrainInterval) {
+        clearInterval(autoTrainInterval);
+        autoTrainInterval = null;
+        btn.innerText = '▶ Auto Train';
+        btn.className = 'btn btn-emerald';
+      } else {
+        btn.innerText = '⏸ Pause';
+        btn.className = 'btn btn-secondary';
+        autoTrainInterval = setInterval(() => {
+          stepOnce();
+          const { loss } = updateLiveValues();
+          if (loss < 0.0001 || epoch > 150) {
+            toggleAutoTrain();
+          }
+        }, 80);
+      }
+    }
+
+    function resetTraining() {
+      if (autoTrainInterval) toggleAutoTrain();
+      sbWSlider.value = "0.50";
+      sbYSlider.value = "1.00";
+      lossHistory = [];
+      epoch = 0;
+      document.getElementById('epoch-count').innerText = '0';
+      updateLiveValues();
+      drawLossPlot();
+    }
+
+    sbWSlider.addEventListener('input', () => { updateLiveValues(); drawLossPlot(); });
+    sbYSlider.addEventListener('input', () => { updateLiveValues(); drawLossPlot(); });
+    sbLrSlider.addEventListener('input', () => { updateLiveValues(); });
+
+    // Window resize handler
+    window.addEventListener('resize', () => {
+      drawDifferentiation();
+      drawIntegration();
+      drawLossPlot();
+    });
+
+    // Nav active link on scroll
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('.nav-links a');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(sec => {
+        const top = sec.offsetTop;
+        if (pageYOffset >= top - 150) current = sec.getAttribute('id');
+      });
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+          link.classList.add('active');
+        }
+      });
+    });
+
+    // Initial render
+    setTimeout(() => {
+      drawDifferentiation();
+      drawIntegration();
+      updateLiveValues();
+      drawLossPlot();
+    }, 150);
+  </script>
+</body>
+</html>
