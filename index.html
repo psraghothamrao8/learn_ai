@@ -22,12 +22,17 @@
       --amber: #f59e0b;
       --amber-glow: rgba(245, 158, 11, 0.25);
       --purple: #a855f7;
+      --purple-glow: rgba(168, 85, 247, 0.25);
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
@@ -41,7 +46,7 @@
 
     /* Sidebar Navigation */
     aside {
-      width: 290px;
+      width: 300px;
       background-color: var(--surface);
       border-right: 1px solid var(--border);
       padding: 1.5rem 1rem;
@@ -63,19 +68,20 @@
       border-bottom: 1px solid var(--border);
     }
     .brand-icon {
-      width: 38px;
-      height: 38px;
+      width: 40px;
+      height: 40px;
       background: linear-gradient(135deg, var(--primary), var(--purple));
-      border-radius: 10px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.25rem;
+      font-size: 1.35rem;
       font-weight: bold;
+      box-shadow: 0 4px 12px var(--primary-glow);
     }
     .brand-text h1 {
       font-size: 1.05rem;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: -0.02em;
       color: #fff;
     }
@@ -90,7 +96,7 @@
       text-transform: uppercase;
       letter-spacing: 0.06em;
       color: var(--text-muted);
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.35rem;
       padding-left: 0.5rem;
     }
 
@@ -105,7 +111,7 @@
       display: flex;
       align-items: center;
       gap: 0.65rem;
-      padding: 0.5rem 0.65rem;
+      padding: 0.45rem 0.65rem;
       border-radius: 8px;
       color: #d1d5db;
       text-decoration: none;
@@ -122,7 +128,7 @@
     .nav-links a.active {
       background-color: var(--primary);
       color: #0b0f19;
-      font-weight: 600;
+      font-weight: 700;
       box-shadow: 0 4px 12px var(--primary-glow);
     }
 
@@ -516,8 +522,8 @@
       <div class="nav-group-title">The Foundations</div>
       <ul class="nav-links">
         <li><a href="#intro" class="active"><span>💡</span> The Core Intuition</a></li>
-        <li><a href="#differentiation"><span>📈</span> 1. Differentiation</a></li>
-        <li><a href="#integration"><span>📊</span> 2. Integration</a></li>
+        <li><a href="#differentiation"><span>📈</span> 1. Differentiation Lab</a></li>
+        <li><a href="#integration"><span>📊</span> 2. Integration Lab</a></li>
       </ul>
     </div>
 
@@ -526,6 +532,7 @@
       <ul class="nav-links">
         <li><a href="#deriv-power"><span>🟩</span> Power Rule (x² &rarr; 2x)</a></li>
         <li><a href="#deriv-product"><span>🟧</span> Product Rule (uv)'</a></li>
+        <li><a href="#deriv-trig"><span>🔄</span> Trig: sin(x) &rarr; cos(x)</a></li>
         <li><a href="#deriv-exp"><span>⚡</span> Why (eˣ)' = eˣ</a></li>
         <li><a href="#deriv-c"><span>🔍</span> Why "+ C" (Lost Shift)</a></li>
         <li><a href="#deriv-ftc"><span>🔄</span> FTC: Why F(b) - F(a)</a></li>
@@ -536,8 +543,9 @@
     <div>
       <div class="nav-group-title">The Neural Net Engine</div>
       <ul class="nav-links">
-        <li><a href="#chain-rule"><span>⚙️</span> The Chain Rule</a></li>
-        <li><a href="#backpropagation"><span>🧠</span> Backpropagation Math</a></li>
+        <li><a href="#chain-rule"><span>⚙️</span> Interactive Gear Chain</a></li>
+        <li><a href="#backpropagation"><span>🧠</span> Single Neuron Backprop</a></li>
+        <li><a href="#multi-layer"><span>🌐</span> Multi-Layer Network Flow</a></li>
         <li><a href="#live-playground"><span>🎮</span> Live Trainer Sandbox</a></li>
         <li><a href="#summary"><span>⚡</span> Summary & Cheatsheet</a></li>
       </ul>
@@ -557,7 +565,7 @@
       <h2>Calculus & Neural Net Backpropagation</h2>
       <p style="font-size: 1.12rem; color: #e5e7eb;">
         Many textbooks teach calculus by asking you to memorize cryptic symbols like <em>dy/dx</em>, <em>&int;</em>, <em>&part;</em>, and formulas like <em>d/dx(xⁿ) = n·xⁿ⁻¹</em>.
-        Here, we derive <strong>every single formula visually using geometric shapes</strong> (expanding squares, partitioned rectangles, and water tanks) so it becomes intuitive and unforgettable.
+        Here, we derive <strong>every single formula visually using geometric shapes</strong> (expanding squares, partitioned rectangles, rotating circles, and gearboxes) so it becomes intuitive and unforgettable.
       </p>
 
       <div class="metaphor-box">
@@ -739,7 +747,7 @@
     </section>
 
     <!-- ========================================================================= -->
-    <!-- NEW CHAPTER: IN-DEPTH FORMULA DERIVATIONS LAB -->
+    <!-- DEDICATED CHAPTER: IN-DEPTH FORMULA DERIVATIONS LAB -->
     <!-- ========================================================================= -->
 
     <!-- DERIVATION 1: POWER RULE -->
@@ -894,20 +902,67 @@
           </div>
         </div>
       </div>
+    </section>
 
-      <div class="derivation-step">
-        <strong>The Step-by-Step Proof:</strong>
-        <p style="margin: 0.35rem 0 0 0; color: #d1d5db;">
-          Change in Area = <span style="color:var(--amber)">v &middot; &Delta;u</span> (width stretch) + <span style="color:var(--emerald)">u &middot; &Delta;v</span> (height stretch) + <span style="color:var(--rose)">&Delta;u &middot; &Delta;v</span> (corner).<br>
-          Divide by &Delta;t: &Delta;Area/&Delta;t = v(&Delta;u/&Delta;t) + u(&Delta;v/&Delta;t) + &Delta;u(&Delta;v/&Delta;t).<br>
-          As &Delta;t &rarr; 0, &Delta;u shrinks to 0, killing the corner piece. We are left with: <strong>(u &middot; v)' = u'v + uv'</strong>!
-        </p>
+    <!-- DERIVATION 3: TRIGONOMETRY SIN -> COS -->
+    <section id="deriv-trig">
+      <div class="hero-badge" style="color: var(--purple); background: rgba(168,85,247,0.1);">Visual Derivation 3</div>
+      <h2>🔄 Trigonometric Derivatives: d/dx [sin(x)] = cos(x)</h2>
+      <p>
+        Why is the derivative of sine equal to cosine?
+        Think of a point traveling around a <strong>unit circle</strong>.
+        Its <strong>height is sin(&theta;)</strong>, and its <strong>horizontal position is cos(&theta;)</strong>.
+        When the point moves forward around the circle, the rate at which its vertical height rises is exactly equal to its horizontal position: <strong>cos(&theta;)</strong>!
+      </p>
+
+      <div class="card">
+        <div class="card-title">
+          <span>Rotating Unit Circle vs Sine & Cosine Wave</span>
+          <span class="pill pill-purple">d/d&theta; [sin(&theta;)] = cos(&theta;)</span>
+        </div>
+
+        <div class="interactive-grid">
+          <div class="canvas-container">
+            <canvas id="trigCanvas"></canvas>
+          </div>
+
+          <div class="controls-panel">
+            <div class="control-group">
+              <div class="control-label">
+                <span>Angle &theta; (Radians)</span>
+                <span id="trig-theta-disp" class="control-val">1.05 rad (60&deg;)</span>
+              </div>
+              <input type="range" id="trig-theta-slider" min="0" max="6.28" step="0.05" value="1.05">
+            </div>
+
+            <div class="math-card">
+              <div class="math-row">
+                <span style="color:var(--primary);">Height y = sin(&theta;):</span>
+                <span id="trig-sin-disp" class="math-val" style="color:var(--primary);">+0.866</span>
+              </div>
+              <div class="math-row">
+                <span style="color:var(--emerald);">Velocity = cos(&theta;):</span>
+                <span id="trig-cos-disp" class="math-val" style="color:var(--emerald);">+0.500</span>
+              </div>
+              <div class="math-row" style="border-top: 1px solid #374151; padding-top: 0.5rem;">
+                <span style="color:var(--amber);">Instantaneous Slope:</span>
+                <span id="trig-slope-disp" class="math-val" style="color:var(--amber);">+0.500</span>
+              </div>
+            </div>
+
+            <div style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.4;">
+              👉 <strong>Drag the angle slider:</strong> At <em>&theta; = 0</em>, height is zero but climbing at maximum speed (+1).
+              At <em>&theta; = &pi;/2</em> (top peak), height is 1 but speed pauses at 0.
+              <strong>The rate of change of sine is literally cosine!</strong>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- DERIVATION 3: EXPONENTIAL e^x -->
+    <!-- DERIVATION 4: EXPONENTIAL e^x -->
     <section id="deriv-exp">
-      <div class="hero-badge" style="color: var(--emerald); background: rgba(16,185,129,0.1);">Visual Derivation 3</div>
+      <div class="hero-badge" style="color: var(--emerald); background: rgba(16,185,129,0.1);">Visual Derivation 4</div>
       <h2>⚡ Why (eˣ)' = eˣ: The Self-Mirroring Curve</h2>
       <p>
         Every other curve in mathematics changes its slope as it grows. What makes the number <em>e &approx; 2.71828</em> miraculous is that 
@@ -957,9 +1012,9 @@
       </div>
     </section>
 
-    <!-- DERIVATION 4: WHY +C -->
+    <!-- DERIVATION 5: WHY +C -->
     <section id="deriv-c">
-      <div class="hero-badge" style="color: var(--rose); background: rgba(244,63,94,0.1);">Visual Derivation 4</div>
+      <div class="hero-badge" style="color: var(--rose); background: rgba(244,63,94,0.1);">Visual Derivation 5</div>
       <h2>🔍 Why "+ C"? The Lost Vertical Shift Detective</h2>
       <p>
         Every student asks: <em>"Why do teachers deduct points if I forget + C in an integral?"</em>
@@ -1006,9 +1061,9 @@
       </div>
     </section>
 
-    <!-- DERIVATION 5: FTC -->
+    <!-- DERIVATION 6: FTC -->
     <section id="deriv-ftc">
-      <div class="hero-badge" style="color: var(--purple); background: rgba(168,85,247,0.1);">Visual Derivation 5</div>
+      <div class="hero-badge" style="color: var(--purple); background: rgba(168,85,247,0.1);">Visual Derivation 6</div>
       <h2>🔄 The Fundamental Theorem: Why F(b) - F(a)?</h2>
       <p>
         Why do we calculate an area by finding the antiderivative <em>F(x)</em> and subtracting <em>F(b) - F(a)</em>?
@@ -1031,9 +1086,9 @@
       </div>
     </section>
 
-    <!-- DERIVATION 6: INTEGRATION BY PARTS -->
+    <!-- DERIVATION 7: INTEGRATION BY PARTS -->
     <section id="deriv-ibp">
-      <div class="hero-badge" style="color: var(--amber); background: rgba(245,158,11,0.1);">Visual Derivation 6</div>
+      <div class="hero-badge" style="color: var(--amber); background: rgba(245,158,11,0.1);">Visual Derivation 7</div>
       <h2>📦 Integration by Parts: &int; u dv = u·v - &int; v du</h2>
       <p>
         Integration by Parts looks like a scary formula to memorize. But geometrically, it is literally:
@@ -1093,31 +1148,52 @@
 
     <!-- SECTION 3: THE CHAIN RULE -->
     <section id="chain-rule">
-      <div class="hero-badge" style="color: var(--amber); background: rgba(245,158,11,0.1);">Connecting The Gears</div>
-      <h2>⚙️ The Chain Rule: Connecting the Gears</h2>
+      <div class="hero-badge" style="color: var(--amber); background: rgba(245,158,11,0.1);">Interactive Gear Train</div>
+      <h2>⚙️ The Chain Rule: Interactive Gearbox</h2>
       <p>
-        Neural networks are not single functions; they are <strong>chains of functions nested inside each other</strong>:
-      </p>
-      <p style="text-align: center; font-family: monospace; font-size: 1.1rem; color: var(--primary);">
-        Input (x) &rarr; Linear sum (z) &rarr; Activation (a) &rarr; Prediction (&ycirc;) &rarr; Loss (L)
-      </p>
-      <p>
-        How do we find the effect of the first input knob <em>w</em> on the final Loss <em>L</em>?
-        We use the <strong>Chain Rule</strong>.
+        Neural networks are not single functions; they are <strong>chains of functions nested inside each other</strong>.
+        Rotate Gear A below and watch how the movement multiplies across the gear train!
       </p>
 
-      <div class="metaphor-box rose">
-        <div class="metaphor-title">🚲 The Bicycle Gear Ratio Intuition</div>
-        <p style="color: #ffe4e6; font-size: 0.95rem; margin-bottom: 0.5rem;">
-          Suppose you pedal gear <strong>A</strong>.
-        </p>
-        <ul style="margin-left: 1.5rem; color: #ffe4e6; font-size: 0.9rem; line-height: 1.8;">
-          <li>Turning Gear A by 1&deg; spins intermediate Gear B by 3&deg; (dB/dA = 3).</li>
-          <li>Turning Gear B by 1&deg; spins the back wheel C by 4&deg; (dC/dB = 4).</li>
-          <li><strong>How much does turning Gear A spin the back wheel C?</strong></li>
-        </ul>
-        <div style="background: rgba(0,0,0,0.4); padding: 0.75rem; border-radius: 8px; font-family: monospace; color: #fff; text-align: center; margin-top: 0.75rem;">
-          dC/dA = (dC/dB) &times; (dB/dA) = 4 &times; 3 = <strong>12</strong>
+      <div class="card">
+        <div class="card-title">
+          <span>Interactive 3-Gear Transmission</span>
+          <span class="pill pill-amber">dC/dA = (dC/dB) &times; (dB/dA)</span>
+        </div>
+
+        <div class="interactive-grid">
+          <div class="canvas-container">
+            <canvas id="gearCanvas"></canvas>
+          </div>
+
+          <div class="controls-panel">
+            <div class="control-group">
+              <div class="control-label">
+                <span>Gear A Angle (&theta;₁)</span>
+                <span id="gear-a-disp" class="control-val">0.0&deg;</span>
+              </div>
+              <input type="range" id="gear-a-slider" min="0" max="360" step="2" value="0">
+            </div>
+
+            <div class="math-card">
+              <div class="math-row">
+                <span style="color:var(--primary);">Gear A &rarr; B (dB/dA):</span>
+                <span class="math-val" style="color:var(--primary);">0.50x (12 teeth &rarr; 24 teeth)</span>
+              </div>
+              <div class="math-row">
+                <span style="color:var(--amber);">Gear B &rarr; C (dC/dB):</span>
+                <span class="math-val" style="color:var(--amber);">3.00x (24 teeth &rarr; 8 teeth)</span>
+              </div>
+              <div class="math-row" style="border-top: 1px solid #374151; padding-top: 0.5rem;">
+                <span style="color:var(--emerald); font-weight:bold;">Total Ratio (dC/dA):</span>
+                <span class="math-val" style="color:var(--emerald); font-size:1.05rem;">0.5 &times; 3.0 = 1.50x</span>
+              </div>
+            </div>
+
+            <div style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.4;">
+              👉 <strong>The Core Takeaway:</strong> To compute the sensitivity of the final output with respect to the initial input, you just multiply all the intermediate step ratios together!
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -1125,7 +1201,7 @@
     <!-- SECTION 4: BACKPROPAGATION -->
     <section id="backpropagation">
       <div class="hero-badge" style="color: var(--rose); background: rgba(244,63,94,0.1);">The Core AI Engine</div>
-      <h2>🧠 Backpropagation: The Complete Math with Real Numbers</h2>
+      <h2>🧠 Backpropagation: Single Neuron Arithmetic</h2>
       <p>
         Now let's trace every calculation by hand for a real neuron, forward and backward.
       </p>
@@ -1137,7 +1213,6 @@
         </div>
 
         <div class="network-dag">
-          <!-- Node 1: Weight & Input -->
           <div class="dag-node">
             <div class="dag-node-title">Input (x)</div>
             <div class="dag-node-val" style="color: var(--primary);">2.0</div>
@@ -1147,7 +1222,6 @@
 
           <div class="dag-arrow">&rarr;</div>
 
-          <!-- Node 2: Linear z -->
           <div class="dag-node active-forward">
             <div class="dag-node-title">Linear (z)</div>
             <div class="dag-node-val" id="dag-z-val" style="color: var(--primary);">1.00</div>
@@ -1157,7 +1231,6 @@
 
           <div class="dag-arrow">&rarr;</div>
 
-          <!-- Node 3: Activation a -->
           <div class="dag-node">
             <div class="dag-node-title">Activation (a)</div>
             <div class="dag-node-val" id="dag-a-val" style="color: var(--amber);">0.731</div>
@@ -1167,7 +1240,6 @@
 
           <div class="dag-arrow">&rarr;</div>
 
-          <!-- Node 4: Loss L -->
           <div class="dag-node active-backward">
             <div class="dag-node-title">Loss (L)</div>
             <div class="dag-node-val" id="dag-loss-val" style="color: var(--rose);">0.036</div>
@@ -1209,6 +1281,36 @@
         <p style="font-size: 0.85rem; color: #9ca3af; margin: 0;">
           💡 <strong>Physical Meaning:</strong> The gradient is negative (-0.1058). Increasing w will decrease the error!
         </p>
+      </div>
+    </section>
+
+    <!-- SECTION: MULTI-LAYER NEURAL NET -->
+    <section id="multi-layer">
+      <div class="hero-badge" style="color: var(--purple); background: rgba(168,85,247,0.1);">Multi-Layer Propagation</div>
+      <h2>🌐 Multi-Layer Network Flow: Pulse Simulator</h2>
+      <p>
+        In deep networks, neurons branch out. Click <strong>"Forward Pulse"</strong> to watch signals flow from inputs to output, 
+        then click <strong>"Backward Pulse"</strong> to watch error gradients flow back through the connections!
+      </p>
+
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+          <span class="pill pill-purple">Architecture: 2 Inputs &rarr; 2 Hidden Neurons &rarr; 1 Output</span>
+          <div style="display: flex; gap: 0.5rem;">
+            <button onclick="triggerPulse('forward')" class="btn btn-primary">▶ Pulse Forward Pass</button>
+            <button onclick="triggerPulse('backward')" class="btn btn-emerald" style="background-color: var(--rose);">◀ Pulse Backward Pass</button>
+          </div>
+        </div>
+
+        <div class="canvas-container">
+          <canvas id="mlpCanvas"></canvas>
+        </div>
+
+        <div style="margin-top: 1rem; font-size: 0.82rem; color: var(--text-muted); line-height: 1.5;">
+          💡 <strong>Notice:</strong> When a gradient reaches a branching neuron, it splits according to weights.
+          If multiple connections flow into a neuron, their gradients simply <strong>add together</strong>:
+          <code style="color:var(--primary)">&part;L/&part;h = &sum; (&part;L/&part;z_next &middot; W)</code>.
+        </div>
       </div>
     </section>
 
@@ -1370,63 +1472,45 @@
       function toX(x) { return pad + ((x - minX) / (maxX - minX)) * (w - pad * 2); }
       function toY(y) { return (h - pad) - ((y - minY) / (maxY - minY)) * (h - pad * 2); }
 
-      ctx.strokeStyle = '#1e293b';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      for (let x = 0; x <= 3.5; x += 1) {
-        ctx.moveTo(toX(x), toY(0)); ctx.lineTo(toX(x), toY(maxY));
-      }
-      for (let y = 0; y <= 12; y += 3) {
-        ctx.moveTo(toX(0), toY(y)); ctx.lineTo(toX(maxX), toY(y));
-      }
+      ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1; ctx.beginPath();
+      for (let x = 0; x <= 3.5; x += 1) { ctx.moveTo(toX(x), toY(0)); ctx.lineTo(toX(x), toY(maxY)); }
+      for (let y = 0; y <= 12; y += 3) { ctx.moveTo(toX(0), toY(y)); ctx.lineTo(toX(maxX), toY(y)); }
       ctx.stroke();
 
-      ctx.strokeStyle = '#475569';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
+      ctx.strokeStyle = '#475569'; ctx.lineWidth = 2; ctx.beginPath();
       ctx.moveTo(toX(0), toY(0)); ctx.lineTo(toX(maxX), toY(0));
       ctx.moveTo(toX(0), toY(0)); ctx.lineTo(toX(0), toY(maxY));
       ctx.stroke();
 
-      // Curve
-      ctx.strokeStyle = '#38bdf8';
-      ctx.lineWidth = 3;
-      ctx.beginPath();
+      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3; ctx.beginPath();
       for (let px = 0; px <= maxX; px += 0.05) {
         const sx = toX(px), sy = toY(f(px));
         if (px === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
       }
       ctx.stroke();
 
-      // Tangent line
-      ctx.strokeStyle = '#10b981';
-      ctx.lineWidth = 2;
-      ctx.setLineDash([4, 4]);
-      ctx.beginPath();
+      const exactSlopeVal = df(xVal);
+      ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2; ctx.setLineDash([4, 4]); ctx.beginPath();
       const tanRange = 1.3;
-      ctx.moveTo(toX(Math.max(0, xVal - tanRange)), toY(y1 - exactSlope * Math.min(xVal, tanRange)));
-      ctx.lineTo(toX(Math.min(maxX, xVal + tanRange)), toY(y1 + exactSlope * (Math.min(maxX, xVal + tanRange) - xVal)));
+      ctx.moveTo(toX(Math.max(0, xVal - tanRange)), toY(y1 - exactSlopeVal * Math.min(xVal, tanRange)));
+      ctx.lineTo(toX(Math.min(maxX, xVal + tanRange)), toY(y1 + exactSlopeVal * (Math.min(maxX, xVal + tanRange) - xVal)));
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // Secant slope triangle
       const p1x = toX(xVal), p1y = toY(y1);
       const p2x = toX(xVal + dxVal), p2y = toY(y2);
       const cornerX = toX(xVal + dxVal), cornerY = toY(y1);
 
-      ctx.fillStyle = 'rgba(244, 63, 94, 0.15)';
-      ctx.beginPath();
-      ctx.moveTo(p1x, p1y); ctx.lineTo(cornerX, cornerY); ctx.lineTo(p2x, p2y); ctx.closePath();
-      ctx.fill();
+      ctx.fillStyle = 'rgba(244, 63, 94, 0.15)'; ctx.beginPath();
+      ctx.moveTo(p1x, p1y); ctx.lineTo(cornerX, cornerY); ctx.lineTo(p2x, p2y); ctx.closePath(); ctx.fill();
 
-      ctx.strokeStyle = '#f43f5e'; ctx.lineWidth = 2.5;
-      ctx.beginPath(); ctx.moveTo(p1x, p1y); ctx.lineTo(p2x, p2y); ctx.stroke();
+      ctx.strokeStyle = '#f43f5e'; ctx.lineWidth = 2.5; ctx.beginPath();
+      ctx.moveTo(p1x, p1y); ctx.lineTo(p2x, p2y); ctx.stroke();
 
-      ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.moveTo(p1x, p1y); ctx.lineTo(cornerX, cornerY); ctx.stroke();
+      ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 2; ctx.beginPath();
+      ctx.moveTo(p1x, p1y); ctx.lineTo(cornerX, cornerY); ctx.stroke();
 
-      ctx.strokeStyle = '#f43f5e';
-      ctx.beginPath(); ctx.moveTo(cornerX, cornerY); ctx.lineTo(p2x, p2y); ctx.stroke();
+      ctx.strokeStyle = '#f43f5e'; ctx.beginPath(); ctx.moveTo(cornerX, cornerY); ctx.lineTo(p2x, p2y); ctx.stroke();
 
       ctx.fillStyle = '#38bdf8'; ctx.beginPath(); ctx.arc(p1x, p1y, 5, 0, Math.PI * 2); ctx.fill();
       ctx.fillStyle = '#f43f5e'; ctx.beginPath(); ctx.arc(p2x, p2y, 5, 0, Math.PI * 2); ctx.fill();
@@ -1491,17 +1575,14 @@
         ctx.strokeRect(rx, ry, rw, rh);
       }
 
-      ctx.strokeStyle = '#38bdf8';
-      ctx.lineWidth = 3;
-      ctx.beginPath();
+      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3; ctx.beginPath();
       for (let px = 0; px <= maxX; px += 0.05) {
         const sx = toX(px), sy = toY(f(px));
         if (px === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
       }
       ctx.stroke();
 
-      ctx.strokeStyle = '#475569'; ctx.lineWidth = 2;
-      ctx.beginPath();
+      ctx.strokeStyle = '#475569'; ctx.lineWidth = 2; ctx.beginPath();
       ctx.moveTo(toX(0), toY(0)); ctx.lineTo(toX(maxX), toY(0));
       ctx.moveTo(toX(0), toY(0)); ctx.lineTo(toX(0), toY(maxY));
       ctx.stroke();
@@ -1541,7 +1622,6 @@
 
       ctx.clearRect(0, 0, w, h);
 
-      // Scale to fit canvas
       const maxTotal = 6.0;
       const scale = Math.min((w - 80) / maxTotal, (h - 80) / maxTotal);
       const startX = 40;
@@ -1550,41 +1630,31 @@
       const pxX = x * scale;
       const pxH = hVal * scale;
 
-      // 1. Central Square (x * x)
       ctx.fillStyle = 'rgba(56, 189, 248, 0.25)';
       ctx.fillRect(startX, startY, pxX, pxX);
-      ctx.strokeStyle = '#38bdf8';
-      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
       ctx.strokeRect(startX, startY, pxX, pxX);
 
-      // 2. Right Strip (x * h)
       ctx.fillStyle = 'rgba(245, 158, 11, 0.35)';
       ctx.fillRect(startX + pxX, startY, pxH, pxX);
       ctx.strokeStyle = '#f59e0b';
       ctx.strokeRect(startX + pxX, startY, pxH, pxX);
 
-      // 3. Bottom Strip (x * h)
       ctx.fillStyle = 'rgba(245, 158, 11, 0.35)';
       ctx.fillRect(startX, startY + pxX, pxX, pxH);
       ctx.strokeStyle = '#f59e0b';
       ctx.strokeRect(startX, startY + pxX, pxX, pxH);
 
-      // 4. Corner Square (h * h)
       ctx.fillStyle = 'rgba(244, 63, 94, 0.5)';
       ctx.fillRect(startX + pxX, startY + pxX, pxH, pxH);
       ctx.strokeStyle = '#f43f5e';
       ctx.strokeRect(startX + pxX, startY + pxX, pxH, pxH);
 
-      // Text Annotations
-      ctx.fillStyle = '#f9fafb';
-      ctx.font = '12px monospace';
+      ctx.fillStyle = '#f9fafb'; ctx.font = '12px monospace';
       ctx.fillText(`Original x² (${origArea.toFixed(1)})`, startX + pxX / 4, startY + pxX / 2);
-
-      ctx.fillStyle = '#f59e0b';
-      ctx.font = '10px monospace';
+      ctx.fillStyle = '#f59e0b'; ctx.font = '10px monospace';
       ctx.fillText(`+x·h`, startX + pxX + 4, startY + pxX / 2);
       ctx.fillText(`+x·h`, startX + pxX / 2 - 10, startY + pxX + pxH / 2 + 3);
-
       ctx.fillStyle = '#f43f5e';
       ctx.fillText(`h²`, startX + pxX + 3, startY + pxX + pxH / 2 + 3);
     }
@@ -1632,33 +1702,27 @@
       const pxDU = du * scale;
       const pxDV = dv * scale;
 
-      // Base u * v
       ctx.fillStyle = 'rgba(56, 189, 248, 0.25)';
       ctx.fillRect(startX, startY, pxU, pxV);
-      ctx.strokeStyle = '#38bdf8';
-      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
       ctx.strokeRect(startX, startY, pxU, pxV);
 
-      // Strip 1: v * du
       ctx.fillStyle = 'rgba(245, 158, 11, 0.35)';
       ctx.fillRect(startX + pxU, startY, pxDU, pxV);
       ctx.strokeStyle = '#f59e0b';
       ctx.strokeRect(startX + pxU, startY, pxDU, pxV);
 
-      // Strip 2: u * dv
       ctx.fillStyle = 'rgba(16, 185, 129, 0.35)';
       ctx.fillRect(startX, startY + pxV, pxU, pxDV);
       ctx.strokeStyle = '#10b981';
       ctx.strokeRect(startX, startY + pxV, pxU, pxDV);
 
-      // Corner: du * dv
       ctx.fillStyle = 'rgba(244, 63, 94, 0.5)';
       ctx.fillRect(startX + pxU, startY + pxV, pxDU, pxDV);
       ctx.strokeStyle = '#f43f5e';
       ctx.strokeRect(startX + pxU, startY + pxV, pxDU, pxDV);
 
-      ctx.fillStyle = '#f9fafb';
-      ctx.font = '12px monospace';
+      ctx.fillStyle = '#f9fafb'; ctx.font = '12px monospace';
       ctx.fillText(`u · v`, startX + pxU / 3, startY + pxV / 2);
       ctx.fillStyle = '#f59e0b';
       ctx.fillText(`v·Δu`, startX + pxU + 4, startY + pxV / 2);
@@ -1672,7 +1736,93 @@
     prDVSlider.addEventListener('input', drawExpandingRectangle);
 
     // ==========================================
-    // 5. EXPONENTIAL (eˣ)' = eˣ
+    // 5. TRIGONOMETRY: sin(θ) -> cos(θ)
+    // ==========================================
+    const trigCanvas = document.getElementById('trigCanvas');
+    const trigThetaSlider = document.getElementById('trig-theta-slider');
+
+    function drawTrig() {
+      const { ctx, w, h } = setupCanvas(trigCanvas);
+      const theta = parseFloat(trigThetaSlider.value);
+      const sinVal = Math.sin(theta);
+      const cosVal = Math.cos(theta);
+
+      document.getElementById('trig-theta-disp').innerText = `${theta.toFixed(2)} rad (${(theta * 180 / Math.PI).toFixed(0)}°)`;
+      document.getElementById('trig-sin-disp').innerText = (sinVal >= 0 ? '+' : '') + sinVal.toFixed(3);
+      document.getElementById('trig-cos-disp').innerText = (cosVal >= 0 ? '+' : '') + cosVal.toFixed(3);
+      document.getElementById('trig-slope-disp').innerText = (cosVal >= 0 ? '+' : '') + cosVal.toFixed(3);
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Left: Unit Circle
+      const centerX = w * 0.28;
+      const centerY = h * 0.5;
+      const radius = Math.min(w * 0.22, h * 0.38);
+
+      ctx.strokeStyle = '#334155'; ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(centerX - radius - 20, centerY); ctx.lineTo(centerX + radius + 20, centerY);
+      ctx.moveTo(centerX, centerY - radius - 20); ctx.lineTo(centerX, centerY + radius + 20);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#64748b'; ctx.lineWidth = 2; ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2); ctx.stroke();
+
+      const px = centerX + radius * Math.cos(theta);
+      const py = centerY - radius * Math.sin(theta);
+
+      // Radius line
+      ctx.strokeStyle = '#a855f7'; ctx.lineWidth = 2; ctx.beginPath();
+      ctx.moveTo(centerX, centerY); ctx.lineTo(px, py); ctx.stroke();
+
+      // Vertical sin drop
+      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2.5; ctx.beginPath();
+      ctx.moveTo(px, centerY); ctx.lineTo(px, py); ctx.stroke();
+
+      // Velocity tangent vector (length = cos)
+      const vx = -Math.sin(theta) * 35;
+      const vy = -Math.cos(theta) * 35;
+      ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2.5; ctx.beginPath();
+      ctx.moveTo(px, py); ctx.lineTo(px + vx, py + vy); ctx.stroke();
+
+      ctx.fillStyle = '#f43f5e'; ctx.beginPath(); ctx.arc(px, py, 5, 0, Math.PI * 2); ctx.fill();
+
+      // Right: Sine Wave
+      const waveStartX = w * 0.58;
+      const waveEndX = w - 20;
+      const waveWidth = waveEndX - waveStartX;
+
+      ctx.strokeStyle = '#334155'; ctx.lineWidth = 1; ctx.beginPath();
+      ctx.moveTo(waveStartX, centerY); ctx.lineTo(waveEndX, centerY); ctx.stroke();
+
+      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2.5; ctx.beginPath();
+      for (let t = 0; t <= Math.PI * 2; t += 0.05) {
+        const sx = waveStartX + (t / (Math.PI * 2)) * waveWidth;
+        const sy = centerY - radius * Math.sin(t);
+        if (t === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+      }
+      ctx.stroke();
+
+      // Dot on wave
+      const dotWaveX = waveStartX + (theta / (Math.PI * 2)) * waveWidth;
+      const dotWaveY = centerY - radius * Math.sin(theta);
+      ctx.fillStyle = '#f43f5e'; ctx.beginPath(); ctx.arc(dotWaveX, dotWaveY, 5, 0, Math.PI * 2); ctx.fill();
+
+      // Horizontal guideline connecting circle to wave
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)'; ctx.lineWidth = 1.5; ctx.setLineDash([3, 3]);
+      ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(dotWaveX, dotWaveY); ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#38bdf8'; ctx.font = '11px monospace';
+      ctx.fillText("y = sin(θ)", waveStartX + 10, centerY - radius - 8);
+      ctx.fillStyle = '#10b981';
+      ctx.fillText("slope = cos(θ)", waveStartX + 10, centerY + radius + 18);
+    }
+
+    trigThetaSlider.addEventListener('input', drawTrig);
+
+    // ==========================================
+    // 6. EXPONENTIAL (eˣ)' = eˣ
     // ==========================================
     const expCanvas = document.getElementById('expCanvas');
     const expXSlider = document.getElementById('exp-x-slider');
@@ -1695,37 +1845,29 @@
       function toX(x) { return pad + ((x - minX) / (maxX - minX)) * (w - pad * 2); }
       function toY(y) { return (h - pad) - ((y - minY) / (maxY - minY)) * (h - pad * 2); }
 
-      // Axes
-      ctx.strokeStyle = '#334155'; ctx.lineWidth = 1;
-      ctx.beginPath();
+      ctx.strokeStyle = '#334155'; ctx.lineWidth = 1; ctx.beginPath();
       ctx.moveTo(toX(minX), toY(0)); ctx.lineTo(toX(maxX), toY(0));
       ctx.moveTo(toX(0), toY(minY)); ctx.lineTo(toX(0), toY(maxY));
       ctx.stroke();
 
-      // Curve eˣ
-      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3;
-      ctx.beginPath();
+      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3; ctx.beginPath();
       for (let px = minX; px <= maxX; px += 0.05) {
         const sx = toX(px), sy = toY(Math.exp(px));
         if (px === minX) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
       }
       ctx.stroke();
 
-      // Tangent line at xVal
       const slope = yVal;
-      ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2.5; ctx.setLineDash([5, 5]);
-      ctx.beginPath();
+      ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2.5; ctx.setLineDash([5, 5]); ctx.beginPath();
       const tanRange = 1.0;
       ctx.moveTo(toX(xVal - tanRange), toY(yVal - slope * tanRange));
       ctx.lineTo(toX(xVal + tanRange), toY(yVal + slope * tanRange));
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // Vertical drop line (Height)
-      ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.moveTo(toX(xVal), toY(0)); ctx.lineTo(toX(xVal), toY(yVal)); ctx.stroke();
+      ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 2; ctx.beginPath();
+      ctx.moveTo(toX(xVal), toY(0)); ctx.lineTo(toX(xVal), toY(yVal)); ctx.stroke();
 
-      // Point Dot
       ctx.fillStyle = '#f43f5e'; ctx.beginPath(); ctx.arc(toX(xVal), toY(yVal), 6, 0, Math.PI * 2); ctx.fill();
 
       ctx.fillStyle = '#f59e0b'; ctx.font = '11px monospace';
@@ -1737,7 +1879,7 @@
     expXSlider.addEventListener('input', drawExponential);
 
     // ==========================================
-    // 6. WHY "+ C" (VERTICAL SHIFT)
+    // 7. WHY "+ C" (VERTICAL SHIFT)
     // ==========================================
     const shiftCanvas = document.getElementById('shiftCanvas');
     const cSlider = document.getElementById('c-slider');
@@ -1758,25 +1900,19 @@
       function toX(x) { return pad + ((x - minX) / (maxX - minX)) * (w - pad * 2); }
       function toY(y) { return (h - pad) - ((y - minY) / (maxY - minY)) * (h - pad * 2); }
 
-      // Axes
-      ctx.strokeStyle = '#334155'; ctx.lineWidth = 1;
-      ctx.beginPath();
+      ctx.strokeStyle = '#334155'; ctx.lineWidth = 1; ctx.beginPath();
       ctx.moveTo(toX(minX), toY(0)); ctx.lineTo(toX(maxX), toY(0));
       ctx.moveTo(toX(0), toY(minY)); ctx.lineTo(toX(0), toY(maxY));
       ctx.stroke();
 
-      // 1. Shifted Curve f(x) = x² + C
-      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3;
-      ctx.beginPath();
+      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3; ctx.beginPath();
       for (let px = minX; px <= maxX; px += 0.05) {
         const sx = toX(px), sy = toY(px * px + C);
         if (px === minX) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
       }
       ctx.stroke();
 
-      // 2. Derivative Curve f'(x) = 2x (Frozen at bottom!)
-      ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2.5;
-      ctx.beginPath();
+      ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2.5; ctx.beginPath();
       for (let px = minX; px <= maxX; px += 0.05) {
         const sx = toX(px), sy = toY(2 * px);
         if (px === minX) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
@@ -1793,7 +1929,7 @@
     cSlider.addEventListener('input', drawShiftCanvas);
 
     // ==========================================
-    // 7. INTEGRATION BY PARTS PARTITIONED BOX
+    // 8. INTEGRATION BY PARTS PARTITIONED BOX
     // ==========================================
     const ibpCanvas = document.getElementById('ibpCanvas');
     const ibpUSlider = document.getElementById('ibp-u-slider');
@@ -1808,7 +1944,6 @@
       document.getElementById('ibp-v-disp').innerText = v.toFixed(1);
 
       const totalBox = u * v;
-      // Let's model curve v = (u / maxU) * maxV
       const a1 = totalBox / 2;
       const a2 = totalBox / 2;
 
@@ -1825,27 +1960,22 @@
       const originX = pad;
       const originY = h - pad;
 
-      // Outer Box (uv)
       ctx.strokeStyle = '#9ca3af'; ctx.lineWidth = 2;
       ctx.strokeRect(originX, originY - boxH, boxW, boxH);
 
-      // Draw partition curve
       ctx.beginPath();
       ctx.moveTo(originX, originY);
       ctx.quadraticCurveTo(originX + boxW * 0.7, originY, originX + boxW, originY - boxH);
       ctx.lineTo(originX + boxW, originY);
       ctx.closePath();
-      ctx.fillStyle = 'rgba(56, 189, 248, 0.35)';
-      ctx.fill();
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.35)'; ctx.fill();
 
-      // Top area
       ctx.beginPath();
       ctx.moveTo(originX, originY);
       ctx.quadraticCurveTo(originX + boxW * 0.7, originY, originX + boxW, originY - boxH);
       ctx.lineTo(originX, originY - boxH);
       ctx.closePath();
-      ctx.fillStyle = 'rgba(16, 185, 129, 0.35)';
-      ctx.fill();
+      ctx.fillStyle = 'rgba(16, 185, 129, 0.35)'; ctx.fill();
 
       ctx.fillStyle = '#38bdf8'; ctx.font = '12px monospace';
       ctx.fillText(`Area 1: ∫ u dv`, originX + boxW * 0.5, originY - boxH * 0.25);
@@ -1861,7 +1991,169 @@
     ibpVSlider.addEventListener('input', drawIBPCanvas);
 
     // ==========================================
-    // 8. LIVE SANDBOX & REALTIME LOSS PLOT
+    // 9. INTERACTIVE GEAR CHAIN (CHAIN RULE)
+    // ==========================================
+    const gearCanvas = document.getElementById('gearCanvas');
+    const gearASlider = document.getElementById('gear-a-slider');
+
+    function drawGear(ctx, cx, cy, r, teeth, angle, color, label) {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(angle);
+
+      ctx.fillStyle = color;
+      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(0, 0, r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      // Draw teeth
+      ctx.fillStyle = '#e2e8f0';
+      for (let i = 0; i < teeth; i++) {
+        const toothAngle = (i / teeth) * Math.PI * 2;
+        ctx.save();
+        ctx.rotate(toothAngle);
+        ctx.fillRect(-3, -r - 5, 6, 8);
+        ctx.restore();
+      }
+
+      ctx.fillStyle = '#0f172a'; ctx.beginPath(); ctx.arc(0, 0, 8, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+
+      ctx.fillStyle = '#f8fafc'; ctx.font = '11px monospace'; ctx.textAlign = 'center';
+      ctx.fillText(label, cx, cy + r + 22);
+    }
+
+    function drawGearChain() {
+      const { ctx, w, h } = setupCanvas(gearCanvas);
+      const angleDeg = parseFloat(gearASlider.value);
+      const angleRad = (angleDeg * Math.PI) / 180;
+
+      document.getElementById('gear-a-disp').innerText = `${angleDeg.toFixed(0)}°`;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Gear 1: r = 40, teeth = 12
+      // Gear 2: r = 80, teeth = 24 -> angle2 = -angleRad * (12/24) = -0.5 * angleRad
+      // Gear 3: r = 30, teeth = 8  -> angle3 = angle2 * (-24/8) = angleRad * 1.5
+      const g1_x = w * 0.22, g1_y = h * 0.5, g1_r = 38;
+      const g2_x = g1_x + g1_r + 76, g2_y = h * 0.5, g2_r = 76;
+      const g3_x = g2_x + g2_r + 28, g3_y = h * 0.5, g3_r = 28;
+
+      const angle2 = -angleRad * 0.5;
+      const angle3 = angleRad * 1.5;
+
+      drawGear(ctx, g1_x, g1_y, g1_r, 12, angleRad, 'rgba(56, 189, 248, 0.4)', 'Gear A (x)');
+      drawGear(ctx, g2_x, g2_y, g2_r, 24, angle2, 'rgba(245, 158, 11, 0.4)', 'Gear B (0.5x)');
+      drawGear(ctx, g3_x, g3_y, g3_r, 8, angle3, 'rgba(16, 185, 129, 0.5)', 'Gear C (1.5x output)');
+    }
+
+    gearASlider.addEventListener('input', drawGearChain);
+
+    // ==========================================
+    // 10. MULTI-LAYER PULSE SIMULATOR (MLP)
+    // ==========================================
+    const mlpCanvas = document.getElementById('mlpCanvas');
+    let pulseType = null;
+    let pulseProgress = 0;
+    let pulseAnimId = null;
+
+    function drawMLP() {
+      const { ctx, w, h } = setupCanvas(mlpCanvas);
+      ctx.clearRect(0, 0, w, h);
+
+      // Node coordinates
+      const layerX = [w * 0.18, w * 0.5, w * 0.82];
+      const inNodes = [{ x: layerX[0], y: h * 0.35, label: "x₁" }, { x: layerX[0], y: h * 0.65, label: "x₂" }];
+      const hidNodes = [{ x: layerX[1], y: h * 0.35, label: "h₁" }, { x: layerX[1], y: h * 0.65, label: "h₂" }];
+      const outNodes = [{ x: layerX[2], y: h * 0.5, label: "ŷ" }];
+
+      // Draw connections
+      function drawConn(p1, p2, active) {
+        ctx.strokeStyle = active ? '#38bdf8' : '#334155';
+        ctx.lineWidth = active ? 2.5 : 1.5;
+        ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+      }
+
+      inNodes.forEach(inN => hidNodes.forEach(hidN => drawConn(inN, hidN, false)));
+      hidNodes.forEach(hidN => outNodes.forEach(outN => drawConn(hidN, outN, false)));
+
+      // If pulsing, draw glowing packet
+      if (pulseType === 'forward') {
+        const t = pulseProgress; // 0 to 1
+        ctx.fillStyle = '#38bdf8';
+        if (t <= 0.5) {
+          const segT = t / 0.5;
+          inNodes.forEach(inN => hidNodes.forEach(hidN => {
+            const px = inN.x + (hidN.x - inN.x) * segT;
+            const py = inN.y + (hidN.y - inN.y) * segT;
+            ctx.beginPath(); ctx.arc(px, py, 5, 0, Math.PI * 2); ctx.fill();
+          }));
+        } else {
+          const segT = (t - 0.5) / 0.5;
+          hidNodes.forEach(hidN => outNodes.forEach(outN => {
+            const px = hidN.x + (outN.x - hidN.x) * segT;
+            const py = hidN.y + (outN.y - hidN.y) * segT;
+            ctx.beginPath(); ctx.arc(px, py, 6, 0, Math.PI * 2); ctx.fill();
+          }));
+        }
+      } else if (pulseType === 'backward') {
+        const t = pulseProgress; // 0 to 1
+        ctx.fillStyle = '#f43f5e';
+        if (t <= 0.5) {
+          const segT = t / 0.5;
+          outNodes.forEach(outN => hidNodes.forEach(hidN => {
+            const px = outN.x + (hidN.x - outN.x) * segT;
+            const py = outN.y + (hidN.y - outN.y) * segT;
+            ctx.beginPath(); ctx.arc(px, py, 6, 0, Math.PI * 2); ctx.fill();
+          }));
+        } else {
+          const segT = (t - 0.5) / 0.5;
+          hidNodes.forEach(hidN => inNodes.forEach(inN => {
+            const px = hidN.x + (inN.x - hidN.x) * segT;
+            const py = hidN.y + (inN.y - hidN.y) * segT;
+            ctx.beginPath(); ctx.arc(px, py, 5, 0, Math.PI * 2); ctx.fill();
+          }));
+        }
+      }
+
+      // Draw Nodes
+      function drawNodeCircle(n, color) {
+        ctx.fillStyle = '#1e293b';
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath(); ctx.arc(n.x, n.y, 20, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+
+        ctx.fillStyle = '#f8fafc'; ctx.font = '13px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(n.label, n.x, n.y);
+      }
+
+      inNodes.forEach(n => drawNodeCircle(n, '#38bdf8'));
+      hidNodes.forEach(n => drawNodeCircle(n, '#a855f7'));
+      outNodes.forEach(n => drawNodeCircle(n, '#10b981'));
+    }
+
+    function triggerPulse(type) {
+      if (pulseAnimId) cancelAnimationFrame(pulseAnimId);
+      pulseType = type;
+      pulseProgress = 0;
+
+      function anim() {
+        pulseProgress += 0.025;
+        drawMLP();
+        if (pulseProgress < 1.0) {
+          pulseAnimId = requestAnimationFrame(anim);
+        } else {
+          pulseType = null;
+          drawMLP();
+        }
+      }
+      pulseAnimId = requestAnimationFrame(anim);
+    }
+
+    // ==========================================
+    // 11. LIVE SANDBOX & REALTIME LOSS PLOT
     // ==========================================
     const lossCanvas = document.getElementById('lossCanvas');
     const sbWSlider = document.getElementById('sb-w-slider');
@@ -1913,16 +2205,14 @@
       ctx.clearRect(0, 0, w, h);
 
       const pad = 40;
-      ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
-      ctx.beginPath();
+      ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1; ctx.beginPath();
       for (let y = 0; y <= 0.5; y += 0.1) {
         const sy = (h - pad) - (y / 0.5) * (h - pad * 2);
         ctx.moveTo(pad, sy); ctx.lineTo(w - pad, sy);
       }
       ctx.stroke();
 
-      ctx.strokeStyle = '#475569'; ctx.lineWidth = 2;
-      ctx.beginPath();
+      ctx.strokeStyle = '#475569'; ctx.lineWidth = 2; ctx.beginPath();
       ctx.moveTo(pad, pad); ctx.lineTo(pad, h - pad); ctx.lineTo(w - pad, h - pad);
       ctx.stroke();
 
@@ -1936,8 +2226,7 @@
         return;
       }
 
-      ctx.strokeStyle = '#f43f5e'; ctx.lineWidth = 2.5;
-      ctx.beginPath();
+      ctx.strokeStyle = '#f43f5e'; ctx.lineWidth = 2.5; ctx.beginPath();
       for (let i = 0; i < lossHistory.length; i++) {
         const sx = pad + (i / Math.max(20, lossHistory.length - 1)) * (w - pad * 2);
         const clampedLoss = Math.min(0.5, lossHistory[i]);
@@ -1992,14 +2281,34 @@
     sbYSlider.addEventListener('input', () => { updateLiveValues(); drawLossPlot(); });
     sbLrSlider.addEventListener('input', () => { updateLiveValues(); });
 
+    // Scroll spy for sidebar links
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('.nav-links a');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(sec => {
+        const top = sec.offsetTop;
+        if (pageYOffset >= top - 150) current = sec.getAttribute('id');
+      });
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+          link.classList.add('active');
+        }
+      });
+    });
+
     window.addEventListener('resize', () => {
       drawDifferentiation();
       drawIntegration();
       drawExpandingSquare();
       drawExpandingRectangle();
+      drawTrig();
       drawExponential();
       drawShiftCanvas();
       drawIBPCanvas();
+      drawGearChain();
+      drawMLP();
       drawLossPlot();
     });
 
@@ -2009,9 +2318,12 @@
       drawIntegration();
       drawExpandingSquare();
       drawExpandingRectangle();
+      drawTrig();
       drawExponential();
       drawShiftCanvas();
       drawIBPCanvas();
+      drawGearChain();
+      drawMLP();
       updateLiveValues();
       drawLossPlot();
     }, 150);
