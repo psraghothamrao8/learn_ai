@@ -971,6 +971,22 @@
           • <strong>Why we divide by dt:</strong> We want to know: <em>"How fast is the area growing per second?"</em> That is why we divide by the clock tick: <em>dA / dt</em>.
         </p>
       </div>
+
+      <div class="metaphor-box purple" style="margin-top: 1rem;">
+        <div class="metaphor-title">❓ "Why 'knob x' and why dx? Do we even need x?"</div>
+        <p style="margin: 0; color: #f3e8ff; font-size: 0.92rem; line-height: 1.7;">
+          <strong>The secret: You DON'T even need x!</strong><br>
+          The purest, most fundamental formula for a rectangle has <strong>no x, no dx, and no division at all</strong>:<br>
+          <span style="display:block; text-align:center; font-family:monospace; font-size:1.15rem; color:var(--primary); margin:0.5rem 0; font-weight:bold;">d(u &middot; v) = u &middot; dv + v &middot; du</span>
+          In plain English: <em>"A tiny change in Area = (width &times; tiny change in height) + (height &times; tiny change in width)."</em><br><br>
+          <strong>So why do textbooks write dx?</strong><br>
+          Only when both sides <em>u</em> and <em>v</em> happen to be controlled by an underlying variable <em>x</em>!
+          <br>• <strong>Example (Plant Leaf):</strong> Suppose <em>u</em> is leaf width, <em>v</em> is leaf length, and <strong>x is the amount of sunlight</strong>.<br>
+          • If you want to know: <em>"How fast does leaf area grow per unit of sunlight?"</em>, you take the pure formula and divide every term by the sunlight nudge <strong>dx</strong>:<br>
+          <span style="display:block; text-align:center; font-family:monospace; font-size:1rem; color:var(--emerald); margin:0.4rem 0;">d(u &middot; v)/dx = u &middot; (dv/dx) + v &middot; (du/dx)</span>
+          • In pure math functions like <em>f(x) = x² &middot; sin(x)</em>, <em>u = x²</em> and <em>v = sin(x)</em> both depend on the same input <em>x</em>.
+        </p>
+      </div>
     </section>
 
     <!-- DERIVATION 3: TRIGONOMETRY SIN -> COS -->
