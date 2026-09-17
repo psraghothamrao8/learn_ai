@@ -829,6 +829,16 @@
         </p>
       </div>
 
+      <div class="metaphor-box emerald" style="margin-top: 1rem;">
+        <div class="metaphor-title">❓ Why Divide by h (&Delta;A / h) Instead of Just Using &Delta;A?</div>
+        <p style="margin: 0; color: #d1fae5; font-size: 0.92rem; line-height: 1.6;">
+          <strong>Why not just &Delta;A?</strong><br>
+          • <strong>The Car Analogy:</strong> &Delta;A is like <em>distance traveled</em> (e.g. 10 miles). It tells you nothing about speed until you divide by time (10 miles / 1 hour = 10 mph).<br>
+          • <strong>The Problem with &Delta;A alone:</strong> If you don't nudge the square (h &rarr; 0), the change in area is obviously 0 (&Delta;A &rarr; 0). Without dividing by h, every single derivative in the universe would just be 0!<br>
+          • <strong>The Ratio reveals Sensitivity:</strong> Dividing by h (&Delta;A / h = 2x + h) tells you the <em>rate of return</em>: for every 1 unit of push on x, how many units of area react? When h &rarr; 0, that ratio locks onto <strong>2x</strong>!
+        </p>
+      </div>
+
       <div class="metaphor-box">
         <div class="metaphor-title">💡 Why x³ becomes 3x² (A 3D Cube!)</div>
         <p style="margin: 0; color: #e0f2fe; font-size: 0.92rem;">
@@ -912,6 +922,42 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div class="metaphor-box amber" style="margin-top: 1rem;">
+        <div class="metaphor-title">🔍 Step-by-Step Proof: How Exactly is v·u' + u·v' Derived?</div>
+        <div style="color: #fef3c7; font-size: 0.9rem; line-height: 1.7;">
+          <strong>Let's trace the math with zero skipped steps:</strong>
+          <ol style="margin-left: 1.25rem; margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
+            <li>
+              <strong>Initial Rectangle Area:</strong><br>
+              At time <em>t</em>, width is <em>u</em> and height is <em>v</em>. Area <em>A = u &middot; v</em>.
+            </li>
+            <li>
+              <strong>After a tiny time step &Delta;t:</strong><br>
+              Width expands by <em>&Delta;u</em> to <em>(u + &Delta;u)</em>.<br>
+              Height expands by <em>&Delta;v</em> to <em>(v + &Delta;v)</em>.<br>
+              New Area: <em>A_new = (u + &Delta;u)(v + &Delta;v) = u&middot;v + u&middot;&Delta;v + v&middot;&Delta;u + &Delta;u&middot;&Delta;v</em>.
+            </li>
+            <li>
+              <strong>Subtract old area to find Change in Area (&Delta;A):</strong><br>
+              <em>&Delta;A = A_new - A = (u&middot;v + u&middot;&Delta;v + v&middot;&Delta;u + &Delta;u&middot;&Delta;v) - u&middot;v</em><br>
+              <em>&Delta;A = <strong>v &middot; &Delta;u + u &middot; &Delta;v + &Delta;u &middot; &Delta;v</strong></em><br>
+              <em>(Notice the 3 pieces: right strip v&middot;&Delta;u, top strip u&middot;&Delta;v, and corner &Delta;u&middot;&Delta;v!)</em>
+            </li>
+            <li>
+              <strong>Divide by &Delta;t to find Rate of Change:</strong><br>
+              <em>&Delta;A / &Delta;t = v &middot; (&Delta;u / &Delta;t) + u &middot; (&Delta;v / &Delta;t) + &Delta;u &middot; (&Delta;v / &Delta;t)</em>
+            </li>
+            <li>
+              <strong>Take the limit as &Delta;t &rarr; 0:</strong><br>
+              • <em>&Delta;u / &Delta;t &rarr; u'</em> (the derivative of u)<br>
+              • <em>&Delta;v / &Delta;t &rarr; v'</em> (the derivative of v)<br>
+              • The corner piece: <em>&Delta;u &middot; (&Delta;v / &Delta;t) &rarr; 0 &times; v' = <strong>0</strong></em> (vanishes completely!)<br>
+              • <strong>Final Result:</strong> <span style="color:var(--primary); font-weight:bold; font-size:1rem;">(u &middot; v)' = v &middot; u' + u &middot; v'</span>!
+            </li>
+          </ol>
         </div>
       </div>
     </section>
